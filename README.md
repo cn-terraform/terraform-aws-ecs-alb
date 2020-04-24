@@ -14,3 +14,5 @@ Test Continuous Integration/Delivery environment on AWS ECS.
 Check valid versions on:
 * Github Releases: <https://github.com/cn-terraform/terraform-aws-alb/releases>
 * Terraform Module Registry: <https://registry.terraform.io/modules/cn-terraform/ci-cd-system/aws>
+
+This terraform module creates an Application Load Balancer and security group rules in order allow traffic to it. It does NOT create any Target Group or Listeners, please create those on your convenience based on the outputs provided by this module.
