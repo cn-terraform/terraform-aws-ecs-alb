@@ -14,7 +14,7 @@ resource "aws_lb" "lb" {
   internal                         = var.internal
   load_balancer_type               = "application"
   drop_invalid_header_fields       = var.drop_invalid_header_fields
-  subnets                          = var.subnets
+  subnets                          = var.internal ? var.private_subnets : var.public_subnets
   idle_timeout                     = var.idle_timeout
   enable_deletion_protection       = var.enable_deletion_protection
   enable_cross_zone_load_balancing = var.enable_cross_zone_load_balancing

@@ -26,10 +26,6 @@ variable "vpc_id" {
 # ---------------------------------------------------------------------------------------------------------------------
 # APPLICATION LOAD BALANCER
 # ---------------------------------------------------------------------------------------------------------------------
-variable "name" {
-  description = "The name of the LB. This name must be unique within your AWS account, can have a maximum of 32 characters, must contain only alphanumeric characters or hyphens, and must not begin or end with a hyphen."
-}
-
 variable "internal" {
   description = "(Optional) If true, the LB will be internal."
   type        = bool
@@ -58,8 +54,13 @@ variable "access_logs" {
   default     = null
 }
 
-variable "subnets" {
-  description = "A list of subnet IDs to attach to the LB."
+variable "private_subnets" {
+  description = "A list of private subnet IDs to attach to the LB if it is INTERNAL."
+  type        = list(string)
+}
+
+variable "public_subnets" {
+  description = "A list of public subnet IDs to attach to the LB if it is NOT internal."
   type        = list(string)
 }
 
