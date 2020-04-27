@@ -113,9 +113,9 @@ resource "aws_lb_target_group" "lb_http_tgs" {
 }
 
 resource "aws_lb_target_group" "lb_https_tgs" {
-  count                         = length(var.http_ports)
+  count                         = length(var.https_ports)
   name                          = "${var.name_preffix}-lb-https-tg-${count.index}"
-  port                          = element(var.http_ports, count.index)
+  port                          = element(var.https_ports, count.index)
   protocol                      = "HTTPS"
   vpc_id                        = var.vpc_id
   deregistration_delay          = var.deregistration_delay
@@ -148,6 +148,30 @@ resource "aws_lb_target_group" "lb_https_tgs" {
 # ---------------------------------------------------------------------------------------------------------------------
 # AWS LOAD BALANCER - Listeners
 # ---------------------------------------------------------------------------------------------------------------------
+resource "aws_lb_listener" "lb_http_listeners" {
+  count             = length(aws_lb_target_group.lb_http_tgs)
+  load_balancer_arn = aws_lb.lb.arn
+  port              = element(aws_lb_target_group.lb_http_tgs.*.port, count.index)
+  protocol          = element(aws_lb_target_group.lb_http_tgs.*.protocol, count.index)
+  default_action {
+    target_group_arn = element(aws_lb_target_group.lb_http_tgs.*.arn, count.index)
+    type             = "forward"
+  }
+}
+
+resource "aws_lb_listener" "lb_https_listeners" {
+  count             = length(aws_lb_target_group.lb_https_tgs)
+  load_balancer_arn = aws_lb.lb.arn
+  port              = element(aws_lb_target_group.lb_https_tgs.*.port, count.index)
+  protocol          = element(aws_lb_target_group.lb_https_tgs.*.protocol, count.index)
+  default_action {
+    target_group_arn = element(aws_lb_target_group.lb_https_tgs.*.arn, count.index)
+    type             = "forward"
+  }
+}
+# TODO
+# ssl_policy - (Optional) The name of the SSL Policy for the listener. Required if protocol is HTTPS or TLS.
+# certificate_arn - (Optional) The ARN of the default SSL server certificate. Exactly one certificate is required if the protocol is HTTPS. For adding additional SSL certificates, see the aws_lb_listener_certificate resource.
 
 
 
