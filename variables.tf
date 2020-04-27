@@ -145,3 +145,79 @@ variable "https_ingress_prefix_list_ids" {
   type        = list(string)
   default     = []
 }
+
+# ---------------------------------------------------------------------------------------------------------------------
+# AWS LOAD BALANCER - Target Groups
+# ---------------------------------------------------------------------------------------------------------------------
+variable "deregistration_delay" {
+  description = "(Optional) The amount time for Elastic Load Balancing to wait before changing the state of a deregistering target from draining to unused. The range is 0-3600 seconds. The default value is 300 seconds."
+  type        = number
+  default     = 300
+}
+
+variable "slow_start" {
+  description = "(Optional) The amount time for targets to warm up before the load balancer sends them a full share of requests. The range is 30-900 seconds or 0 to disable. The default value is 0 seconds."
+  type        = number
+  default     = 0
+}
+
+variable "load_balancing_algorithm_type" {
+  description = "(Optional) Determines how the load balancer selects targets when routing requests. The value is round_robin or least_outstanding_requests. The default is round_robin."
+  type        = string
+  default     = "round_robin"
+}
+
+variable "stickiness" {
+  description = "(Optional) A Stickiness block. Provide three fields. type, the type of sticky sessions. The only current possible value is lb_cookie. cookie_duration, the time period, in seconds, during which requests from a client should be routed to the same target. After this time period expires, the load balancer-generated cookie is considered stale. The range is 1 second to 1 week (604800 seconds). The default value is 1 day (86400 seconds). enabled, boolean to enable / disable stickiness. Default is true."
+  type = object({
+    type            = string
+    cookie_duration = string
+    enabled         = bool
+  })
+  default = {
+    type            = "lb_cookie"
+    cookie_duration = 86400
+    enabled         = true
+  }
+}
+
+variable "target_group_health_check_enabled" {
+  description = "(Optional) Indicates whether health checks are enabled. Defaults to true."
+  type        = bool
+  default     = true
+}
+
+variable "target_group_health_check_interval" {
+  description = "(Optional) The approximate amount of time, in seconds, between health checks of an individual target. Minimum value 5 seconds, Maximum value 300 seconds. Default 30 seconds."
+  type        = number
+  default     = 30
+}
+
+variable "target_group_health_check_path" {
+  description = "The destination for the health check request."
+  type        = string
+}
+
+variable "target_group_health_check_timeout" {
+  description = "(Optional) The amount of time, in seconds, during which no response means a failed health check. The range is 2 to 120 seconds, and the default is 5 seconds."
+  type        = number
+  default     = 5
+}
+
+variable "target_group_health_check_healthy_threshold" {
+  description = "(Optional) The number of consecutive health checks successes required before considering an unhealthy target healthy. Defaults to 3."
+  type        = number
+  default     = 3
+}
+
+variable "target_group_health_check_unhealthy_threshold" {
+  description = "(Optional) The number of consecutive health check failures required before considering the target unhealthy. Defaults to 3."
+  type        = number
+  default     = 3
+}
+
+variable "target_group_health_check_matcher" {
+  description = "The HTTP codes to use when checking for a successful response from a target. You can specify multiple values (for example, \"200,202\") or a range of values (for example, \"200-299\"). Default is 200."
+  type        = string
+  default     = "200"
+}

@@ -75,3 +75,87 @@ resource "aws_security_group_rule" "ingress_through_https" {
   cidr_blocks       = var.https_ingress_cidr_blocks
   prefix_list_ids   = var.https_ingress_prefix_list_ids
 }
+
+# ---------------------------------------------------------------------------------------------------------------------
+# AWS LOAD BALANCER - Target Groups
+# ---------------------------------------------------------------------------------------------------------------------
+resource "aws_lb_target_group" "lb_http_tgs" {
+  count                         = length(var.http_ports)
+  name                          = "${var.name_preffix}-lb-http-tg-${count.index}"
+  port                          = element(var.http_ports, count.index)
+  protocol                      = "HTTP"
+  vpc_id                        = var.vpc_id
+  deregistration_delay          = var.deregistration_delay
+  slow_start                    = var.slow_start
+  load_balancing_algorithm_type = var.load_balancing_algorithm_type
+  dynamic "stickiness" {
+    for_each = var.stickiness == null ? [] : [var.stickiness]
+    content {
+      type            = stickiness.value.bucket
+      cookie_duration = stickiness.value.prefix
+      enabled         = stickiness.value.enabled
+    }
+  }
+  health_check {
+    enabled             = var.target_group_health_check_enabled
+    interval            = var.target_group_health_check_interval
+    path                = var.target_group_health_check_path
+    protocol            = "HTTP"
+    timeout             = var.target_group_health_check_timeout
+    healthy_threshold   = var.target_group_health_check_healthy_threshold
+    unhealthy_threshold = var.target_group_health_check_unhealthy_threshold
+    matcher             = var.target_group_health_check_matcher
+  }
+  target_type = "ip"
+  tags = {
+    Name = "${var.name_preffix}-lb-http-tg-${count.index}"
+  }
+}
+
+resource "aws_lb_target_group" "lb_https_tgs" {
+  count                         = length(var.http_ports)
+  name                          = "${var.name_preffix}-lb-https-tg-${count.index}"
+  port                          = element(var.http_ports, count.index)
+  protocol                      = "HTTPS"
+  vpc_id                        = var.vpc_id
+  deregistration_delay          = var.deregistration_delay
+  slow_start                    = var.slow_start
+  load_balancing_algorithm_type = var.load_balancing_algorithm_type
+  dynamic "stickiness" {
+    for_each = var.stickiness == null ? [] : [var.stickiness]
+    content {
+      type            = stickiness.value.bucket
+      cookie_duration = stickiness.value.prefix
+      enabled         = stickiness.value.enabled
+    }
+  }
+  health_check {
+    enabled             = var.target_group_health_check_enabled
+    interval            = var.target_group_health_check_interval
+    path                = var.target_group_health_check_path
+    protocol            = "HTTPS"
+    timeout             = var.target_group_health_check_timeout
+    healthy_threshold   = var.target_group_health_check_healthy_threshold
+    unhealthy_threshold = var.target_group_health_check_unhealthy_threshold
+    matcher             = var.target_group_health_check_matcher
+  }
+  target_type = "ip"
+  tags = {
+    Name = "${var.name_preffix}-lb-https-tg-${count.index}"
+  }
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# AWS LOAD BALANCER - Listeners
+# ---------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
