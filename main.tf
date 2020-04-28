@@ -119,6 +119,10 @@ resource "aws_lb_target_group" "lb_http_tgs" {
   tags = {
     Name = "${var.name_preffix}-lb-http-tg-${count.index}"
   }
+  lifecycle {
+    create_before_destroy = true
+  }
+  depends_on = [ aws_lb.lb ]
 }
 
 resource "aws_lb_target_group" "lb_https_tgs" {
@@ -152,6 +156,10 @@ resource "aws_lb_target_group" "lb_https_tgs" {
   tags = {
     Name = "${var.name_preffix}-lb-https-tg-${count.index}"
   }
+  lifecycle {
+    create_before_destroy = true
+  }
+  depends_on = [ aws_lb.lb ]
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
