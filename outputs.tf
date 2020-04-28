@@ -74,32 +74,32 @@ output "aws_security_group_lb_access_sg_egress" {
 # ---------------------------------------------------------------------------------------------------------------------
 output "lb_http_tgs_ids" {
   description = "List of HTTP Target Groups IDs"
-  value       = ["${aws_lb_target_group.lb_http_tgs.*.id}"]
+  value       = aws_lb_target_group.lb_http_tgs.*.id
 }
 
 output "lb_http_tgs_arns" {
   description = "List of HTTP Target Groups ARNs"
-  value       = ["${aws_lb_target_group.lb_http_tgs.*.arn}"]
+  value       = aws_lb_target_group.lb_http_tgs.*.arn
 }
 
 output "lb_http_tgs_names" {
   description = "List of HTTP Target Groups Names"
-  value       = ["${aws_lb_target_group.lb_http_tgs.*.name}"]
+  value       = aws_lb_target_group.lb_http_tgs.*.name
 }
 
 output "lb_https_tgs_ids" {
   description = "List of HTTPS Target Groups IDs"
-  value       = ["${aws_lb_target_group.lb_https_tgs.*.id}"]
+  value       = aws_lb_target_group.lb_https_tgs.*.id
 }
 
 output "lb_https_tgs_arns" {
   description = "List of HTTPS Target Groups ARNs"
-  value       = ["${aws_lb_target_group.lb_https_tgs.*.arn}"]
+  value       = aws_lb_target_group.lb_https_tgs.*.arn
 }
 
 output "lb_https_tgs_names" {
   description = "List of HTTPS Target Groups Names"
-  value       = ["${aws_lb_target_group.lb_https_tgs.*.name}"]
+  value       = aws_lb_target_group.lb_https_tgs.*.name
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -107,20 +107,20 @@ output "lb_https_tgs_names" {
 # ---------------------------------------------------------------------------------------------------------------------
 output "lb_http_listeners_ids" {
   description = "List of HTTP Listeners IDs"
-  value       = ["${aws_lb_listener.lb_http_listeners.*.id}"]
+  value       = aws_lb_listener.lb_http_listeners.*.id
 }
 
 output "lb_http_listeners_arns" {
   description = "List of HTTP Listeners ARNs"
-  value       = ["${aws_lb_listener.lb_http_listeners.*.arn}"]
+  value       = aws_lb_listener.lb_http_listeners.*.arn
 }
 
 output "lb_https_listeners_ids" {
   description = "List of HTTPS Listeners IDs"
-  value       = ["${aws_lb_listener.lb_https_listeners.*.id}"]
+  value       = aws_lb_listener.lb_https_listeners.*.id
 }
 
 output "lb_https_listeners_arns" {
   description = "List of HTTPS Listeners ARNs"
-  value       = ["${aws_lb_listener.lb_https_listeners.*.arn}"]
+  value       = aws_lb_listener.lb_https_listeners.*.arn
 }
