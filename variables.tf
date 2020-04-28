@@ -44,16 +44,6 @@ variable "drop_invalid_header_fields" {
   default     = false
 }
 
-variable "access_logs" {
-  description = "(Optional) An Access Logs block. Provide three fields. bucket, the S3 bucket name to store the logs in. prefix, the S3 bucket prefix. enabled, boolean to enable / disable access_logs."
-  type = object({
-    bucket  = string
-    prefix  = string
-    enabled = bool
-  })
-  default     = null
-}
-
 variable "private_subnets" {
   description = "A list of private subnet IDs to attach to the LB if it is INTERNAL."
   type        = list(string)
@@ -196,6 +186,7 @@ variable "target_group_health_check_interval" {
 variable "target_group_health_check_path" {
   description = "The destination for the health check request."
   type        = string
+  default     = "/"
 }
 
 variable "target_group_health_check_timeout" {

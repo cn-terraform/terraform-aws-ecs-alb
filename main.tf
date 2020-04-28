@@ -7,6 +7,17 @@ provider "aws" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
+# S3 BUCKET - For access logs
+# ---------------------------------------------------------------------------------------------------------------------
+# resource "aws_s3_bucket" "logs" {
+#   bucket = "${var.name_preffix}-lb-logs"
+#   region = var.region
+#   tags = {
+#     Name = "${var.name_preffix}-lb-logs"
+#   }
+# }
+
+# ---------------------------------------------------------------------------------------------------------------------
 # APPLICATION LOAD BALANCER
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_lb" "lb" {
@@ -20,17 +31,15 @@ resource "aws_lb" "lb" {
   enable_cross_zone_load_balancing = var.enable_cross_zone_load_balancing
   enable_http2                     = var.enable_http2
   ip_address_type                  = var.ip_address_type
-  security_groups    = compact(
+  security_groups                  = compact(
     concat(var.security_groups, [aws_security_group.lb_access_sg.id]),
   )
-  dynamic "access_logs" {
-    for_each = var.access_logs == null ? [] : [var.access_logs]
-    content {
-      bucket  = access_logs.value.bucket
-      prefix  = access_logs.value.prefix
-      enabled = access_logs.value.enabled
-    }
-  }
+  # TODO - Enable this feature
+  # access_logs {
+  #   bucket  = aws_s3_bucket.logs.id
+  #   prefix  = ""
+  #   enabled = true
+  # }
   tags = {
     Name = "${var.name_preffix}-lb"
   }
@@ -91,8 +100,8 @@ resource "aws_lb_target_group" "lb_http_tgs" {
   dynamic "stickiness" {
     for_each = var.stickiness == null ? [] : [var.stickiness]
     content {
-      type            = stickiness.value.bucket
-      cookie_duration = stickiness.value.prefix
+      type            = stickiness.value.type
+      cookie_duration = stickiness.value.cookie_duration
       enabled         = stickiness.value.enabled
     }
   }
