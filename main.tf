@@ -137,8 +137,8 @@ resource "aws_lb_target_group" "lb_https_tgs" {
   dynamic "stickiness" {
     for_each = var.stickiness == null ? [] : [var.stickiness]
     content {
-      type            = stickiness.value.bucket
-      cookie_duration = stickiness.value.prefix
+      type            = stickiness.value.type
+      cookie_duration = stickiness.value.cookie_duration
       enabled         = stickiness.value.enabled
     }
   }
