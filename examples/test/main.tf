@@ -15,7 +15,7 @@ module "base-network" {
 module "load_balancer" {
   source          = "../../"
   name_preffix    = "test-alb"
-  vpc_id          = module.networking.vpc_id
-  private_subnets = module.networking.private_subnets_ids
-  public_subnets  = module.networking.public_subnets_ids
+  vpc_id          = module.base-network.vpc_id
+  private_subnets = module.base-network.private_subnets_ids
+  public_subnets  = module.base-network.public_subnets_ids
 }
