@@ -158,7 +158,7 @@ resource "aws_lb_target_group" "lb_https_tgs" {
 # AWS LOAD BALANCER - Listeners
 #------------------------------------------------------------------------------
 resource "aws_lb_listener" "lb_http_listeners" {
-  count             = var.enable_http ? length(aws_lb_target_group.lb_http_tgs) : 0
+  count             = var.enable_http ? length(var.http_ports) : 0
   load_balancer_arn = aws_lb.lb.arn
   port              = element(aws_lb_target_group.lb_http_tgs.*.port, count.index)
   protocol          = element(aws_lb_target_group.lb_http_tgs.*.protocol, count.index)
@@ -169,7 +169,7 @@ resource "aws_lb_listener" "lb_http_listeners" {
 }
 
 resource "aws_lb_listener" "lb_https_listeners" {
-  count             = var.enable_https ? length(aws_lb_target_group.lb_https_tgs) : 0
+  count             = var.enable_https ? length(var.https_ports) : 0
   load_balancer_arn = aws_lb.lb.arn
   port              = element(aws_lb_target_group.lb_https_tgs.*.port, count.index)
   protocol          = element(aws_lb_target_group.lb_https_tgs.*.protocol, count.index)
