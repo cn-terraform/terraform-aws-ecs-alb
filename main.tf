@@ -2,10 +2,10 @@
 # S3 BUCKET - For access logs
 #------------------------------------------------------------------------------
 # resource "aws_s3_bucket" "logs" {
-#   bucket = "${var.name_preffix}-lb-logs"
+#   bucket = "${var.name_prefix}-lb-logs"
 #   region = var.region
 #   tags = {
-#     Name = "${var.name_preffix}-lb-logs"
+#     Name = "${var.name_prefix}-lb-logs"
 #   }
 # }
 
@@ -13,7 +13,7 @@
 # APPLICATION LOAD BALANCER
 #------------------------------------------------------------------------------
 resource "aws_lb" "lb" {
-  name                             = "${var.name_preffix}-lb"
+  name                             = "${var.name_prefix}-lb"
   internal                         = var.internal
   load_balancer_type               = "application"
   drop_invalid_header_fields       = var.drop_invalid_header_fields
@@ -33,7 +33,7 @@ resource "aws_lb" "lb" {
   #   enabled = true
   # }
   tags = {
-    Name = "${var.name_preffix}-lb"
+    Name = "${var.name_prefix}-lb"
   }
 }
 
@@ -41,7 +41,7 @@ resource "aws_lb" "lb" {
 # ACCESS CONTROL TO APPLICATION LOAD BALANCER
 #------------------------------------------------------------------------------
 resource "aws_security_group" "lb_access_sg" {
-  name        = "${var.name_preffix}-lb-access-sg"
+  name        = "${var.name_prefix}-lb-access-sg"
   description = "Controls access to the Load Balancer"
   vpc_id      = var.vpc_id
   egress {
@@ -51,7 +51,7 @@ resource "aws_security_group" "lb_access_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name = "${var.name_preffix}-lb-access-sg"
+    Name = "${var.name_prefix}-lb-access-sg"
   }
 }
 
@@ -82,7 +82,7 @@ resource "aws_security_group_rule" "ingress_through_https" {
 #------------------------------------------------------------------------------
 resource "aws_lb_target_group" "lb_http_tgs" {
   count                         = var.enable_http ? length(var.http_ports) : 0
-  name                          = "${var.name_preffix}-lb-http-tg-${count.index}"
+  name                          = "${var.name_prefix}-lb-http-tg-${count.index}"
   port                          = element(var.http_ports, count.index)
   protocol                      = "HTTP"
   vpc_id                        = var.vpc_id
@@ -109,7 +109,7 @@ resource "aws_lb_target_group" "lb_http_tgs" {
   }
   target_type = "ip"
   tags = {
-    Name = "${var.name_preffix}-lb-http-tg-${count.index}"
+    Name = "${var.name_prefix}-lb-http-tg-${count.index}"
   }
   lifecycle {
     create_before_destroy = true
@@ -119,7 +119,7 @@ resource "aws_lb_target_group" "lb_http_tgs" {
 
 resource "aws_lb_target_group" "lb_https_tgs" {
   count                         = var.enable_https ? length(var.https_ports) : 0
-  name                          = "${var.name_preffix}-lb-https-tg-${count.index}"
+  name                          = "${var.name_prefix}-lb-https-tg-${count.index}"
   port                          = element(var.https_ports, count.index)
   protocol                      = "HTTPS"
   vpc_id                        = var.vpc_id
@@ -146,7 +146,7 @@ resource "aws_lb_target_group" "lb_https_tgs" {
   }
   target_type = "ip"
   tags = {
-    Name = "${var.name_preffix}-lb-https-tg-${count.index}"
+    Name = "${var.name_prefix}-lb-https-tg-${count.index}"
   }
   lifecycle {
     create_before_destroy = true
