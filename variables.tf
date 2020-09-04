@@ -86,7 +86,7 @@ variable "enable_http" {
 variable "http_ports" {
   description = "The list of ports with access to the Load Balancer through HTTP listeners"
   type        = list(number)
-  default     = [ 80 ]
+  default     = [80]
 }
 
 variable "http_ingress_cidr_blocks" {
@@ -110,7 +110,7 @@ variable "enable_https" {
 variable "https_ports" {
   description = "The list of ports with access to the Load Balancer through HTTPS listeners"
   type        = list(number)
-  default     = [ 443 ]
+  default     = [443]
 }
 
 variable "https_ingress_cidr_blocks" {

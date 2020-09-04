@@ -23,7 +23,7 @@ resource "aws_lb" "lb" {
   enable_cross_zone_load_balancing = var.enable_cross_zone_load_balancing
   enable_http2                     = var.enable_http2
   ip_address_type                  = var.ip_address_type
-  security_groups                  = compact(
+  security_groups = compact(
     concat(var.security_groups, [aws_security_group.lb_access_sg.id]),
   )
   # TODO - Enable this feature
@@ -114,7 +114,7 @@ resource "aws_lb_target_group" "lb_http_tgs" {
   lifecycle {
     create_before_destroy = true
   }
-  depends_on = [ aws_lb.lb ]
+  depends_on = [aws_lb.lb]
 }
 
 resource "aws_lb_target_group" "lb_https_tgs" {
@@ -151,7 +151,7 @@ resource "aws_lb_target_group" "lb_https_tgs" {
   lifecycle {
     create_before_destroy = true
   }
-  depends_on = [ aws_lb.lb ]
+  depends_on = [aws_lb.lb]
 }
 
 #------------------------------------------------------------------------------
