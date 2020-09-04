@@ -4,7 +4,7 @@ provider "aws" {
 
 module "base-network" {
   source                                      = "cn-terraform/networking/aws"
-  version                                     = "2.0.8"
+  version                                     = "2.0.10"
   name_prefix                                 = "base"
   vpc_cidr_block                              = "192.168.0.0/16"
   availability_zones                          = ["us-east-1a", "us-east-1b", "us-east-1c", "us-east-1d"]
