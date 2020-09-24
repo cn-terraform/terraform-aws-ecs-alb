@@ -87,6 +87,11 @@ output "lb_http_tgs_names" {
   value       = aws_lb_target_group.lb_http_tgs.*.name
 }
 
+output "lb_http_tgs_ports" {
+  description = "List of HTTP Target Groups ports"
+  value       = aws_lb_target_group.lb_http_tgs.*.port
+}
+
 output "lb_https_tgs_ids" {
   description = "List of HTTPS Target Groups IDs"
   value       = aws_lb_target_group.lb_https_tgs.*.id
@@ -100,6 +105,11 @@ output "lb_https_tgs_arns" {
 output "lb_https_tgs_names" {
   description = "List of HTTPS Target Groups Names"
   value       = aws_lb_target_group.lb_https_tgs.*.name
+}
+
+output "lb_https_tgs_ports" {
+  description = "List of HTTPS Target Groups ports"
+  value       = aws_lb_target_group.lb_https_tgs.*.port
 }
 
 #------------------------------------------------------------------------------
