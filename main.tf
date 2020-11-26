@@ -56,22 +56,22 @@ resource "aws_security_group" "lb_access_sg" {
 }
 
 resource "aws_security_group_rule" "ingress_through_http" {
-  count             = var.enable_http ? length(var.http_ports) : 0
+  for_each          = var.http_ports
   security_group_id = aws_security_group.lb_access_sg.id
   type              = "ingress"
-  from_port         = element(var.http_ports, count.index)
-  to_port           = element(var.http_ports, count.index)
+  from_port         = each.value.listener_port
+  to_port           = each.value.listener_port
   protocol          = "tcp"
   cidr_blocks       = var.http_ingress_cidr_blocks
   prefix_list_ids   = var.http_ingress_prefix_list_ids
 }
 
 resource "aws_security_group_rule" "ingress_through_https" {
-  count             = var.enable_https ? length(var.https_ports) : 0
+  for_each          = var.https_ports
   security_group_id = aws_security_group.lb_access_sg.id
   type              = "ingress"
-  from_port         = element(var.https_ports, count.index)
-  to_port           = element(var.https_ports, count.index)
+  from_port         = each.value.listener_port
+  to_port           = each.value.listener_port
   protocol          = "tcp"
   cidr_blocks       = var.https_ingress_cidr_blocks
   prefix_list_ids   = var.https_ingress_prefix_list_ids
@@ -81,9 +81,9 @@ resource "aws_security_group_rule" "ingress_through_https" {
 # AWS LOAD BALANCER - Target Groups
 #------------------------------------------------------------------------------
 resource "aws_lb_target_group" "lb_http_tgs" {
-  count                         = var.enable_http ? length(var.http_ports) : 0
-  name                          = "${var.name_prefix}-lb-http-tg-${count.index}"
-  port                          = element(var.http_ports, count.index)
+  for_each                      = var.http_ports
+  name                          = "${var.name_prefix}-http-${each.value.target_group_port}"
+  port                          = each.value.target_group_port
   protocol                      = "HTTP"
   vpc_id                        = var.vpc_id
   deregistration_delay          = var.deregistration_delay
@@ -109,7 +109,7 @@ resource "aws_lb_target_group" "lb_http_tgs" {
   }
   target_type = "ip"
   tags = {
-    Name = "${var.name_prefix}-lb-http-tg-${count.index}"
+    Name = "${var.name_prefix}-http-${each.value.target_group_port}"
   }
   lifecycle {
     create_before_destroy = true
@@ -118,9 +118,9 @@ resource "aws_lb_target_group" "lb_http_tgs" {
 }
 
 resource "aws_lb_target_group" "lb_https_tgs" {
-  count                         = var.enable_https ? length(var.https_ports) : 0
-  name                          = "${var.name_prefix}-lb-https-tg-${count.index}"
-  port                          = element(var.https_ports, count.index)
+  for_each                      = var.https_ports
+  name                          = "${var.name_prefix}-https-${each.value.target_group_port}"
+  port                          = each.value.target_group_port
   protocol                      = "HTTPS"
   vpc_id                        = var.vpc_id
   deregistration_delay          = var.deregistration_delay
@@ -146,7 +146,7 @@ resource "aws_lb_target_group" "lb_https_tgs" {
   }
   target_type = "ip"
   tags = {
-    Name = "${var.name_prefix}-lb-https-tg-${count.index}"
+    Name = "${var.name_prefix}-https-${each.value.target_group_port}"
   }
   lifecycle {
     create_before_destroy = true
@@ -158,23 +158,23 @@ resource "aws_lb_target_group" "lb_https_tgs" {
 # AWS LOAD BALANCER - Listeners
 #------------------------------------------------------------------------------
 resource "aws_lb_listener" "lb_http_listeners" {
-  count             = var.enable_http ? length(var.http_ports) : 0
+  for_each          = var.http_ports
   load_balancer_arn = aws_lb.lb.arn
-  port              = element(aws_lb_target_group.lb_http_tgs.*.port, count.index)
-  protocol          = element(aws_lb_target_group.lb_http_tgs.*.protocol, count.index)
+  port              = each.value.listener_port
+  protocol          = aws_lb_target_group.lb_http_tgs[each.key].protocol
   default_action {
-    target_group_arn = element(aws_lb_target_group.lb_http_tgs.*.arn, count.index)
+    target_group_arn = aws_lb_target_group.lb_http_tgs[each.key].arn
     type             = "forward"
   }
 }
 
 resource "aws_lb_listener" "lb_https_listeners" {
-  count             = var.enable_https ? length(var.https_ports) : 0
+  for_each          = var.https_ports
   load_balancer_arn = aws_lb.lb.arn
-  port              = element(aws_lb_target_group.lb_https_tgs.*.port, count.index)
-  protocol          = element(aws_lb_target_group.lb_https_tgs.*.protocol, count.index)
+  port              = each.value.listener_port
+  protocol          = aws_lb_target_group.lb_https_tgs[each.key].protocol
   default_action {
-    target_group_arn = element(aws_lb_target_group.lb_https_tgs.*.arn, count.index)
+    target_group_arn = aws_lb_target_group.lb_https_tgs[each.key].arn
     type             = "forward"
   }
 }

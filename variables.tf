@@ -76,17 +76,26 @@ variable "ip_address_type" {
 #------------------------------------------------------------------------------
 # ACCESS CONTROL TO APPLICATION LOAD BALANCER
 #------------------------------------------------------------------------------
-
-variable "enable_http" {
-  description = "Enable HTTP Listeners for ports on the variable http_ports. Defaults to true"
-  type        = bool
-  default     = true
+variable "http_ports" {
+  description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTP requests"
+  type        = map
+  default     = {
+    default_http = {
+      listener_port     = 80
+      target_group_port = 80
+    }
+  }
 }
 
-variable "http_ports" {
-  description = "The list of ports with access to the Load Balancer through HTTP listeners"
-  type        = list(number)
-  default     = [80]
+variable "https_ports" {
+  description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTPS requests"
+  type        = map
+  default     = {
+    default_http = {
+      listener_port     = 443
+      target_group_port = 443
+    }
+  }
 }
 
 variable "http_ingress_cidr_blocks" {
@@ -99,18 +108,6 @@ variable "http_ingress_prefix_list_ids" {
   description = "List of prefix list IDs blocks to allowed to access the Load Balancer through HTTP"
   type        = list(string)
   default     = []
-}
-
-variable "enable_https" {
-  description = "Enable HTTPS Listeners for ports on the variable https_ports. Defaults to true"
-  type        = bool
-  default     = true
-}
-
-variable "https_ports" {
-  description = "The list of ports with access to the Load Balancer through HTTPS listeners"
-  type        = list(number)
-  default     = [443]
 }
 
 variable "https_ingress_cidr_blocks" {
