@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # S3 BUCKET - For access logs
 #------------------------------------------------------------------------------
-# resource "aws_s3_bucket" "logs" {
-#   bucket = "${var.name_prefix}-lb-logs"
-#   region = var.region
-#   tags = {
-#     Name = "${var.name_prefix}-lb-logs"
-#   }
-# }
+resource "aws_s3_bucket" "logs" {
+  bucket = "${var.name_prefix}-lb-logs"
+  acl    = "log-delivery-write"
+  tags = {
+    Name = "${var.name_prefix}-lb-logs"
+  }
+}
 
 #------------------------------------------------------------------------------
 # APPLICATION LOAD BALANCER
@@ -26,12 +26,12 @@ resource "aws_lb" "lb" {
   security_groups = compact(
     concat(var.security_groups, [aws_security_group.lb_access_sg.id]),
   )
-  # TODO - Enable this feature
-  # access_logs {
-  #   bucket  = aws_s3_bucket.logs.id
-  #   prefix  = ""
-  #   enabled = true
-  # }
+
+  access_logs {
+    bucket  = aws_s3_bucket.logs.id
+    enabled = true
+  }
+
   tags = {
     Name = "${var.name_prefix}-lb"
   }
