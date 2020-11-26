@@ -1,13 +1,3 @@
-output "http_ports" {
-  description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTP requests"
-  value       = var.http_ports
-}
-
-output "https_ports" {
-  description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTPS requests"
-  value       = var.https_ports
-}
-
 #------------------------------------------------------------------------------
 # APPLICATION LOAD BALANCER
 #------------------------------------------------------------------------------
@@ -99,7 +89,14 @@ output "lb_http_tgs_names" {
 
 output "lb_http_tgs_ports" {
   description = "List of HTTP Target Groups ports"
-  value       = [for tg in aws_lb_target_group.lb_http_tgs : tg.port]
+  value       = [for tg in aws_lb_target_group.lb_http_tgs : tostring(tg.port)]
+}
+
+output "lb_http_tgs_map_arn_port" {
+  value = "${zipmap(
+    [for tg in aws_lb_target_group.lb_http_tgs : tg.arn],
+    [for tg in aws_lb_target_group.lb_http_tgs : tostring(tg.port)]
+  )}"
 }
 
 output "lb_https_tgs_ids" {
@@ -119,7 +116,14 @@ output "lb_https_tgs_names" {
 
 output "lb_https_tgs_ports" {
   description = "List of HTTPS Target Groups ports"
-  value       = [for tg in aws_lb_target_group.lb_https_tgs : tg.port]
+  value       = [for tg in aws_lb_target_group.lb_https_tgs : tostring(tg.port)]
+}
+
+output "lb_https_tgs_map_arn_port" {
+  value = "${zipmap(
+    [for tg in aws_lb_target_group.lb_https_tgs : tg.arn],
+    [for tg in aws_lb_target_group.lb_https_tgs : tostring(tg.port)]
+  )}"
 }
 
 #------------------------------------------------------------------------------
