@@ -120,10 +120,10 @@ output "lb_https_tgs_ports" {
 }
 
 output "lb_https_tgs_map_arn_port" {
-  value = "${zipmap(
+  value = zipmap(
     [for tg in aws_lb_target_group.lb_https_tgs : tg.arn],
     [for tg in aws_lb_target_group.lb_https_tgs : tostring(tg.port)]
-  )}"
+  )
 }
 
 #------------------------------------------------------------------------------
