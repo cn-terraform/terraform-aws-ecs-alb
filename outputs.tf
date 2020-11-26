@@ -1,3 +1,13 @@
+output "http_ports" {
+  description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTP requests"
+  value       = var.http_ports
+}
+
+output "https_ports" {
+  description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTPS requests"
+  value       = var.https_ports
+}
+
 #------------------------------------------------------------------------------
 # APPLICATION LOAD BALANCER
 #------------------------------------------------------------------------------
