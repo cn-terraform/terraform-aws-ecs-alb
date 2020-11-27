@@ -173,11 +173,17 @@ resource "aws_lb_listener" "lb_https_listeners" {
   load_balancer_arn = aws_lb.lb.arn
   port              = each.value.listener_port
   protocol          = aws_lb_target_group.lb_https_tgs[each.key].protocol
+  ssl_policy        = var.ssl_policy
+  certificate_arn   = var.default_certificate_arn
   default_action {
     target_group_arn = aws_lb_target_group.lb_https_tgs[each.key].arn
     type             = "forward"
   }
 }
-# TODO
-# ssl_policy - (Optional) The name of the SSL Policy for the listener. Required if protocol is HTTPS or TLS.
-# certificate_arn - (Optional) The ARN of the default SSL server certificate. Exactly one certificate is required if the protocol is HTTPS. For adding additional SSL certificates, see the aws_lb_listener_certificate resource.
+
+# TODO - Think a way to add multiple additional certificates to multiple listeners.
+# resource "aws_lb_listener_certificate" "additional_certificates_for_https_listeners" {
+#   for_each        = toset(var.additional_certificates_arn_for_https_listeners)
+#   listener_arn    = aws_lb_listener.lb_https_listeners.arn
+#   certificate_arn = each.key
+# }
