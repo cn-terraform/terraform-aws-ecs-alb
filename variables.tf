@@ -211,8 +211,8 @@ variable "default_certificate_arn" {
   default     = null
 }
 
-# variable "additional_certificates_arn_for_https_listeners" {
-#   description = "(Optional) List of SSL server certificate ARNs for HTTPS listener. Use it if you need to set additional certificates besides default_certificate_arn"
-#   type        = list
-#   default     = []
-# }
+variable "additional_certificates_arn_for_https_listeners" {
+  description = "(Optional) List of SSL server certificate ARNs for HTTPS listener. Use it if you need to set additional certificates besides default_certificate_arn"
+  type        = list
+  default     = []
+}

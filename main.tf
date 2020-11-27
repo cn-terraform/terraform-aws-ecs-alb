@@ -181,9 +181,27 @@ resource "aws_lb_listener" "lb_https_listeners" {
   }
 }
 
-# TODO - Think a way to add multiple additional certificates to multiple listeners.
-# resource "aws_lb_listener_certificate" "additional_certificates_for_https_listeners" {
-#   for_each        = toset(var.additional_certificates_arn_for_https_listeners)
-#   listener_arn    = aws_lb_listener.lb_https_listeners.arn
-#   certificate_arn = each.key
-# }
+locals {
+  list_maps_listener_certificate_arns = flatten([
+    for cert_arn in var.additional_certificates_arn_for_https_listeners : [
+      for listener in aws_lb_listener.lb_https_listeners : {
+        name            = "${listener}-${cert_arn}"
+        listener_arn    = listener.arn
+        certificate_arn = cert_arn
+      }
+    ]
+  ])
+
+  map_listener_certificate_arns = {
+    for obj in local.list_maps_listener_certificate_arns : obj.name => {
+      listener_arn    = obj.listener_arn,
+      certificate_arn = obj.certificate_arn
+    }
+  }
+}
+
+resource "aws_lb_listener_certificate" "additional_certificates_for_https_listeners" {
+  for_each        = local.map_listener_certificate_arns
+  listener_arn    = each.value.listener_arn
+  certificate_arn = each.value.certificate_arn
+}
