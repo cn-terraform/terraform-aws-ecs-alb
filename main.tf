@@ -1,8 +1,19 @@
-data "aws_elb_service_account" "default" {}
+#------------------------------------------------------------------------------
+# S3 BUCKET - For access logs
+#------------------------------------------------------------------------------
+resource "aws_s3_bucket" "logs" {
+  bucket = "${var.name_prefix}-lb-logs"
+  acl    = "log-delivery-write"
+  tags = {
+    Name = "${var.name_prefix}-lb-logs"
+  }
+}
 
 #------------------------------------------------------------------------------
-# IAM POLICY DOCUMENT - For access logs to the s3 bucket
+# IAM POLICY DOCUMENT - For access logs to the S3 bucket
 #------------------------------------------------------------------------------
+data "aws_elb_service_account" "default" {}
+
 data "aws_iam_policy_document" "lb_logs_access_policy_document" {
   statement {
     effect = "Allow"
@@ -17,6 +28,7 @@ data "aws_iam_policy_document" "lb_logs_access_policy_document" {
     ]
 
     resources = [
+      "${aws_s3_bucket.logs.arn}/*",
       "arn:aws:s3:::${var.name_prefix}-lb-logs/*",
     ]
   }
@@ -28,17 +40,6 @@ data "aws_iam_policy_document" "lb_logs_access_policy_document" {
 resource "aws_s3_bucket_policy" "lb_logs_access_policy" {
   bucket = aws_s3_bucket.logs.id
   policy = data.aws_iam_policy_document.lb_logs_access_policy_document.json
-}
-
-#------------------------------------------------------------------------------
-# S3 BUCKET - For access logs
-#------------------------------------------------------------------------------
-resource "aws_s3_bucket" "logs" {
-  bucket = "${var.name_prefix}-lb-logs"
-  acl    = "log-delivery-write"
-  tags = {
-    Name = "${var.name_prefix}-lb-logs"
-  }
 }
 
 #------------------------------------------------------------------------------
