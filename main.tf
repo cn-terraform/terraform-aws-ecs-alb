@@ -1,3 +1,35 @@
+data "aws_elb_service_account" "default" {}
+
+#------------------------------------------------------------------------------
+# IAM POLICY DOCUMENT - For access logs to the s3 bucket
+#------------------------------------------------------------------------------
+data "aws_iam_policy_document" "lb_logs_access_policy_document" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "AWS"
+      identifiers = [data.aws_elb_service_account.default.arn]
+    }
+
+    actions = [
+      "s3:PutObject",
+    ]
+
+    resources = [
+      "arn:aws:s3:::${var.name_prefix}-lb-logs/*",
+    ]
+  }
+}
+
+#------------------------------------------------------------------------------
+# IAM POLICY - For access logs to the s3 bucket
+#------------------------------------------------------------------------------
+resource "aws_s3_bucket_policy" "lb_logs_access_policy" {
+  bucket = aws_s3_bucket.logs.id
+  policy = data.aws_iam_policy_document.lb_logs_access_policy_document.json
+}
+
 #------------------------------------------------------------------------------
 # S3 BUCKET - For access logs
 #------------------------------------------------------------------------------
