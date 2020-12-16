@@ -43,6 +43,20 @@ resource "aws_s3_bucket_policy" "lb_logs_access_policy" {
 }
 
 #------------------------------------------------------------------------------
+# S3 bucket block public access
+#------------------------------------------------------------------------------
+resource "aws_s3_bucket_public_access_block" "lb_logs_block_public_access" {
+  count = var.block_s3_bucket_public_access ? 1 : 0
+
+  bucket = aws_s3_bucket.logs.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+#------------------------------------------------------------------------------
 # APPLICATION LOAD BALANCER
 #------------------------------------------------------------------------------
 resource "aws_lb" "lb" {

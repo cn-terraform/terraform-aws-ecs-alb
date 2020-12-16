@@ -13,6 +13,15 @@ variable "vpc_id" {
 }
 
 #------------------------------------------------------------------------------
+# S3 bucket
+#------------------------------------------------------------------------------
+variable "block_s3_bucket_public_access" {
+  description = "(Optional) If true, public access to the S3 bucket will be blocked."
+  type        = bool
+  default     = false
+}
+
+#------------------------------------------------------------------------------
 # APPLICATION LOAD BALANCER
 #------------------------------------------------------------------------------
 variable "internal" {
@@ -78,7 +87,7 @@ variable "ip_address_type" {
 #------------------------------------------------------------------------------
 variable "http_ports" {
   description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTP requests"
-  type        = map
+  type        = map(any)
   default = {
     default_http = {
       listener_port     = 80
@@ -89,7 +98,7 @@ variable "http_ports" {
 
 variable "https_ports" {
   description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTPS requests"
-  type        = map
+  type        = map(any)
   default = {
     default_http = {
       listener_port     = 443
@@ -213,6 +222,6 @@ variable "default_certificate_arn" {
 
 variable "additional_certificates_arn_for_https_listeners" {
   description = "(Optional) List of SSL server certificate ARNs for HTTPS listener. Use it if you need to set additional certificates besides default_certificate_arn"
-  type        = list
+  type        = list(any)
   default     = []
 }
