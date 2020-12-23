@@ -86,58 +86,19 @@ variable "ip_address_type" {
 # ACCESS CONTROL TO APPLICATION LOAD BALANCER
 #------------------------------------------------------------------------------
 variable "http_ports" {
-  description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTP requests"
+  description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
   type        = map(any)
   default = {
     default_http = {
+      type              = "fordward"
       listener_port     = 80
       target_group_port = 80
     }
   }
 }
 
-/*
-
-Other options for listeners (The same are valid also for https_ports variable):
-
-Redirect (Force HTTPS):
-
-variable "http_ports" {
-  description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTP requests"
-  type        = map
-  default = {
-    force_https = {
-      type          = "redirect"
-      listener_port = 80
-      host          = "#{host}"
-      path          = "/#{path}"
-      port          = "443"
-      protocol      = "https"
-      query         = "#{query}"
-      status_code   = "HTTP_301"
-    }
-  }
-}
-
-variable "http_ports" {
-  description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTP requests"
-  type        = map
-  default = {
-    fixed_response = {
-      type          = "fixed-response"
-      listener_port = 80
-      content_type  = "text/plain"
-      message_body  = "Server error"
-      status_code   = "500"
-    }
-  }
-}
-
-*/
-
-
 variable "https_ports" {
-  description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTPS requests"
+  description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
   type        = map(any)
   default = {
     default_http = {
@@ -146,6 +107,42 @@ variable "https_ports" {
     }
   }
 }
+
+/*
+Other options for listeners (The same are valid also for https_ports variable):
+
+Redirect (Force HTTPS):
+  variable "http_ports" {
+    description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTP requests"
+    type        = map
+    default = {
+      force_https = {
+        type          = "redirect"
+        listener_port = 80
+        host          = "#{host}"
+        path          = "/#{path}"
+        port          = "443"
+        protocol      = "https"
+        query         = "#{query}"
+        status_code   = "HTTP_301"
+      }
+    }
+  }
+Fixed response:
+  variable "http_ports" {
+    description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTP requests"
+    type        = map
+    default = {
+      fixed_response = {
+        type          = "fixed-response"
+        listener_port = 80
+        content_type  = "text/plain"
+        message_body  = "Server error"
+        status_code   = "500"
+      }
+    }
+  }
+*/
 
 variable "http_ingress_cidr_blocks" {
   description = "List of CIDR blocks to allowed to access the Load Balancer through HTTP"
