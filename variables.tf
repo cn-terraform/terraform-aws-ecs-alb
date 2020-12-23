@@ -90,7 +90,7 @@ variable "http_ports" {
   type        = map(any)
   default = {
     default_http = {
-      type              = "fordward"
+      type              = "forward"
       listener_port     = 80
       target_group_port = 80
     }
@@ -102,6 +102,7 @@ variable "https_ports" {
   type        = map(any)
   default = {
     default_http = {
+      type              = "forward"
       listener_port     = 443
       target_group_port = 443
     }
