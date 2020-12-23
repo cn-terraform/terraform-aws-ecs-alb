@@ -128,7 +128,10 @@ resource "aws_security_group_rule" "ingress_through_https" {
 # AWS LOAD BALANCER - Target Groups
 #------------------------------------------------------------------------------
 resource "aws_lb_target_group" "lb_http_tgs" {
-  for_each                      = var.http_ports
+  for_each = {
+    for name, config in var.http_ports : name => config
+    if lookup(config, "type", "") == "" || lookup(config, "type", "") == "forward"
+  }
   name                          = "${var.name_prefix}-http-${each.value.target_group_port}"
   port                          = each.value.target_group_port
   protocol                      = "HTTP"
@@ -165,7 +168,10 @@ resource "aws_lb_target_group" "lb_http_tgs" {
 }
 
 resource "aws_lb_target_group" "lb_https_tgs" {
-  for_each                      = var.https_ports
+  for_each = {
+    for name, config in var.https_ports : name => config
+    if lookup(config, "type", "") == "" || lookup(config, "type", "") == "forward"
+  }
   name                          = "${var.name_prefix}-https-${each.value.target_group_port}"
   port                          = each.value.target_group_port
   protocol                      = "HTTPS"
@@ -208,10 +214,44 @@ resource "aws_lb_listener" "lb_http_listeners" {
   for_each          = var.http_ports
   load_balancer_arn = aws_lb.lb.arn
   port              = each.value.listener_port
-  protocol          = aws_lb_target_group.lb_http_tgs[each.key].protocol
-  default_action {
-    target_group_arn = aws_lb_target_group.lb_http_tgs[each.key].arn
-    type             = "forward"
+  protocol          = "HTTP"
+
+  dynamic "default_action" {
+    for_each = lookup(each.value, "type", "") == "redirect" ? [1] : []
+    content {
+      type = "redirect"
+
+      redirect {
+        host        = lookup(each.value, "host", "#{host}")
+        path        = lookup(each.value, "path", "/#{path}")
+        port        = lookup(each.value, "port", "#{port}")
+        protocol    = lookup(each.value, "protocol", "#{protocol}")
+        query       = lookup(each.value, "query", "#{query}")
+        status_code = lookup(each.value, "status_code", "HTTP_301")
+      }
+    }
+  }
+
+  dynamic "default_action" {
+    for_each = lookup(each.value, "type", "") == "fixed-response" ? [1] : []
+    content {
+      type = "fixed-response"
+
+      fixed_response {
+        content_type = lookup(each.value, "content_type", "text/plain")
+        message_body = lookup(each.value, "message_body", "Fixed response content")
+        status_code  = lookup(each.value, "status_code", "200")
+      }
+    }
+  }
+
+  # We fallback to using forward type action if type is not defined
+  dynamic "default_action" {
+    for_each = (lookup(each.value, "type", "") == "" || lookup(each.value, "type", "") == "forward") ? [1] : []
+    content {
+      target_group_arn = aws_lb_target_group.lb_http_tgs[each.key].arn
+      type             = "forward"
+    }
   }
 }
 
@@ -219,12 +259,46 @@ resource "aws_lb_listener" "lb_https_listeners" {
   for_each          = var.https_ports
   load_balancer_arn = aws_lb.lb.arn
   port              = each.value.listener_port
-  protocol          = aws_lb_target_group.lb_https_tgs[each.key].protocol
+  protocol          = "HTTPS"
   ssl_policy        = var.ssl_policy
   certificate_arn   = var.default_certificate_arn
-  default_action {
-    target_group_arn = aws_lb_target_group.lb_https_tgs[each.key].arn
-    type             = "forward"
+
+  dynamic "default_action" {
+    for_each = lookup(each.value, "type", "") == "redirect" ? [1] : []
+    content {
+      type = "redirect"
+
+      redirect {
+        host        = lookup(each.value, "host", "#{host}")
+        path        = lookup(each.value, "path", "/#{path}")
+        port        = lookup(each.value, "port", "#{port}")
+        protocol    = lookup(each.value, "protocol", "#{protocol}")
+        query       = lookup(each.value, "query", "#{query}")
+        status_code = lookup(each.value, "status_code", "HTTP_301")
+      }
+    }
+  }
+
+  dynamic "default_action" {
+    for_each = lookup(each.value, "type", "") == "fixed-response" ? [1] : []
+    content {
+      type = "fixed-response"
+
+      fixed_response {
+        content_type = lookup(each.value, "content_type", "text/plain")
+        message_body = lookup(each.value, "message_body", "Fixed response content")
+        status_code  = lookup(each.value, "status_code", "200")
+      }
+    }
+  }
+
+  # We fallback to using forward type action if type is not defined
+  dynamic "default_action" {
+    for_each = (lookup(each.value, "type", "") == "" || lookup(each.value, "type", "") == "forward") ? [1] : []
+    content {
+      target_group_arn = aws_lb_target_group.lb_https_tgs[each.key].arn
+      type             = "forward"
+    }
   }
 }
 

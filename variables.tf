@@ -96,6 +96,46 @@ variable "http_ports" {
   }
 }
 
+/*
+
+Other options for listeners (The same are valid also for https_ports variable):
+
+Redirect (Force HTTPS):
+
+variable "http_ports" {
+  description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTP requests"
+  type        = map
+  default = {
+    force_https = {
+      type          = "redirect"
+      listener_port = 80
+      host          = "#{host}"
+      path          = "/#{path}"
+      port          = "443"
+      protocol      = "https"
+      query         = "#{query}"
+      status_code   = "HTTP_301"
+    }
+  }
+}
+
+variable "http_ports" {
+  description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTP requests"
+  type        = map
+  default = {
+    fixed_response = {
+      type          = "fixed-response"
+      listener_port = 80
+      content_type  = "text/plain"
+      message_body  = "Server error"
+      status_code   = "500"
+    }
+  }
+}
+
+*/
+
+
 variable "https_ports" {
   description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTPS requests"
   type        = map(any)
