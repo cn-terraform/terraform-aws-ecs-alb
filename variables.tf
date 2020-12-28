@@ -118,10 +118,9 @@ variable "https_ports" {
 /*
 Other options for listeners (The same are valid also for https_ports variable):
 
-Redirect (Force HTTPS):
   variable "http_ports" {
-    description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTP requests"
-    type        = map
+    description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
+    type        = map(any)
     default = {
       force_https = {
         type          = "redirect"
@@ -135,10 +134,11 @@ Redirect (Force HTTPS):
       }
     }
   }
+
 Fixed response:
   variable "http_ports" {
-    description = "Map containing objects with two fields, listener_port and the target_group_port to redirect HTTP requests"
-    type        = map
+    description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
+    type        = map(any)
     default = {
       fixed_response = {
         type          = "fixed-response"
@@ -149,6 +149,22 @@ Fixed response:
       }
     }
   }
+
+Additionally, you can have an HTTPS listener forwarding traffic to an HTTP target group by setting `target_group_protocol` to `HTTP`. The default for `https_ports` variable is `HTTPS`:
+
+  variable "https_ports" {
+    description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
+    type        = map(any)
+    default = {
+      https_listener_to_http_target_group = {
+        type                  = "forward"
+        listener_port         = 443
+        target_group_port     = 80
+        target_group_protocol = HTTP
+      }
+    }
+  }
+
 */
 
 variable "http_ingress_cidr_blocks" {
