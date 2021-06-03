@@ -4,9 +4,12 @@
 resource "aws_s3_bucket" "logs" {
   bucket = "${var.name_prefix}-lb-logs"
   acl    = "log-delivery-write"
-  tags = {
-    Name = "${var.name_prefix}-lb-logs"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.name_prefix}-lb-logs"
+    },
+  )
 }
 
 #------------------------------------------------------------------------------
@@ -79,9 +82,12 @@ resource "aws_lb" "lb" {
     enabled = true
   }
 
-  tags = {
-    Name = "${var.name_prefix}-lb"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.name_prefix}-lb"
+    },
+  )
 }
 
 #------------------------------------------------------------------------------
@@ -97,9 +103,12 @@ resource "aws_security_group" "lb_access_sg" {
     to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
-  tags = {
-    Name = "${var.name_prefix}-lb-access-sg"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.name_prefix}-lb-access-sg"
+    },
+  )
 }
 
 resource "aws_security_group_rule" "ingress_through_http" {
@@ -158,9 +167,12 @@ resource "aws_lb_target_group" "lb_http_tgs" {
     matcher             = var.target_group_health_check_matcher
   }
   target_type = "ip"
-  tags = {
-    Name = "${var.name_prefix}-http-${each.value.target_group_port}"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.name_prefix}-http-${each.value.target_group_port}"
+    },
+  )
   lifecycle {
     create_before_destroy = true
   }
@@ -198,9 +210,12 @@ resource "aws_lb_target_group" "lb_https_tgs" {
     matcher             = var.target_group_health_check_matcher
   }
   target_type = "ip"
-  tags = {
-    Name = "${var.name_prefix}-https-${each.value.target_group_port}"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.name_prefix}-https-${each.value.target_group_port}"
+    },
+  )
   lifecycle {
     create_before_destroy = true
   }
@@ -253,6 +268,8 @@ resource "aws_lb_listener" "lb_http_listeners" {
       type             = "forward"
     }
   }
+
+  tags = var.tags
 }
 
 resource "aws_lb_listener" "lb_https_listeners" {
@@ -300,6 +317,8 @@ resource "aws_lb_listener" "lb_https_listeners" {
       type             = "forward"
     }
   }
+
+  tags = var.tags
 }
 
 locals {
