@@ -143,7 +143,7 @@ resource "aws_lb_target_group" "lb_http_tgs" {
   }
   name                          = "${var.name_prefix}-http-${each.value.target_group_port}"
   port                          = each.value.target_group_port
-  protocol                      = lookup(each.value, "target_group_protocol", "") == "" ?  "HTTP" : each.value.target_group_protocol
+  protocol                      = lookup(each.value, "target_group_protocol", "") == "" ? "HTTP" : each.value.target_group_protocol
   vpc_id                        = var.vpc_id
   deregistration_delay          = var.deregistration_delay
   slow_start                    = var.slow_start
@@ -160,7 +160,7 @@ resource "aws_lb_target_group" "lb_http_tgs" {
     enabled             = var.target_group_health_check_enabled
     interval            = var.target_group_health_check_interval
     path                = var.target_group_health_check_path
-    protocol            = lookup(each.value, "target_group_protocol", "") == "" ?  "HTTP" : each.value.target_group_protocol
+    protocol            = lookup(each.value, "target_group_protocol", "") == "" ? "HTTP" : each.value.target_group_protocol
     timeout             = var.target_group_health_check_timeout
     healthy_threshold   = var.target_group_health_check_healthy_threshold
     unhealthy_threshold = var.target_group_health_check_unhealthy_threshold
@@ -186,7 +186,7 @@ resource "aws_lb_target_group" "lb_https_tgs" {
   }
   name                          = "${var.name_prefix}-https-${each.value.target_group_port}"
   port                          = each.value.target_group_port
-  protocol                      = lookup(each.value, "target_group_protocol", "") == "" ?  "HTTPS" : each.value.target_group_protocol
+  protocol                      = lookup(each.value, "target_group_protocol", "") == "" ? "HTTPS" : each.value.target_group_protocol
   vpc_id                        = var.vpc_id
   deregistration_delay          = var.deregistration_delay
   slow_start                    = var.slow_start
@@ -203,7 +203,7 @@ resource "aws_lb_target_group" "lb_https_tgs" {
     enabled             = var.target_group_health_check_enabled
     interval            = var.target_group_health_check_interval
     path                = var.target_group_health_check_path
-    protocol            = lookup(each.value, "target_group_protocol", "") == "" ?  "HTTPS" : each.value.target_group_protocol
+    protocol            = lookup(each.value, "target_group_protocol", "") == "" ? "HTTPS" : each.value.target_group_protocol
     timeout             = var.target_group_health_check_timeout
     healthy_threshold   = var.target_group_health_check_healthy_threshold
     unhealthy_threshold = var.target_group_health_check_unhealthy_threshold
