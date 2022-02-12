@@ -3,13 +3,17 @@
 #------------------------------------------------------------------------------
 resource "aws_s3_bucket" "logs" {
   bucket = "${var.name_prefix}-lb-logs"
-  acl    = "log-delivery-write"
   tags = merge(
     var.tags,
     {
       Name = "${var.name_prefix}-lb-logs"
     },
   )
+}
+
+resource "aws_s3_bucket_acl" "logs" {
+  bucket = aws_s3_bucket.logs.id
+  acl    = "log-delivery-write"
 }
 
 #------------------------------------------------------------------------------

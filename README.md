@@ -37,13 +37,13 @@ In order to run all checks at any point run the following command:
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 3.74.1 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.74 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.50.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.0.0 |
 
 ## Modules
 
@@ -53,20 +53,21 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [aws_lb.lb](https://registry.terraform.io/providers/hashicorp/aws/3.74.1/docs/resources/lb) | resource |
-| [aws_lb_listener.lb_http_listeners](https://registry.terraform.io/providers/hashicorp/aws/3.74.1/docs/resources/lb_listener) | resource |
-| [aws_lb_listener.lb_https_listeners](https://registry.terraform.io/providers/hashicorp/aws/3.74.1/docs/resources/lb_listener) | resource |
-| [aws_lb_listener_certificate.additional_certificates_for_https_listeners](https://registry.terraform.io/providers/hashicorp/aws/3.74.1/docs/resources/lb_listener_certificate) | resource |
-| [aws_lb_target_group.lb_http_tgs](https://registry.terraform.io/providers/hashicorp/aws/3.74.1/docs/resources/lb_target_group) | resource |
-| [aws_lb_target_group.lb_https_tgs](https://registry.terraform.io/providers/hashicorp/aws/3.74.1/docs/resources/lb_target_group) | resource |
-| [aws_s3_bucket.logs](https://registry.terraform.io/providers/hashicorp/aws/3.74.1/docs/resources/s3_bucket) | resource |
-| [aws_s3_bucket_policy.lb_logs_access_policy](https://registry.terraform.io/providers/hashicorp/aws/3.74.1/docs/resources/s3_bucket_policy) | resource |
-| [aws_s3_bucket_public_access_block.lb_logs_block_public_access](https://registry.terraform.io/providers/hashicorp/aws/3.74.1/docs/resources/s3_bucket_public_access_block) | resource |
-| [aws_security_group.lb_access_sg](https://registry.terraform.io/providers/hashicorp/aws/3.74.1/docs/resources/security_group) | resource |
-| [aws_security_group_rule.ingress_through_http](https://registry.terraform.io/providers/hashicorp/aws/3.74.1/docs/resources/security_group_rule) | resource |
-| [aws_security_group_rule.ingress_through_https](https://registry.terraform.io/providers/hashicorp/aws/3.74.1/docs/resources/security_group_rule) | resource |
-| [aws_elb_service_account.default](https://registry.terraform.io/providers/hashicorp/aws/3.74.1/docs/data-sources/elb_service_account) | data source |
-| [aws_iam_policy_document.lb_logs_access_policy_document](https://registry.terraform.io/providers/hashicorp/aws/3.74.1/docs/data-sources/iam_policy_document) | data source |
+| [aws_lb.lb](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb) | resource |
+| [aws_lb_listener.lb_http_listeners](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) | resource |
+| [aws_lb_listener.lb_https_listeners](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) | resource |
+| [aws_lb_listener_certificate.additional_certificates_for_https_listeners](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener_certificate) | resource |
+| [aws_lb_target_group.lb_http_tgs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group) | resource |
+| [aws_lb_target_group.lb_https_tgs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group) | resource |
+| [aws_s3_bucket.logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
+| [aws_s3_bucket_acl.logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl) | resource |
+| [aws_s3_bucket_policy.lb_logs_access_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
+| [aws_s3_bucket_public_access_block.lb_logs_block_public_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
+| [aws_security_group.lb_access_sg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
+| [aws_security_group_rule.ingress_through_http](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.ingress_through_https](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_elb_service_account.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/elb_service_account) | data source |
+| [aws_iam_policy_document.lb_logs_access_policy_document](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 
 ## Inputs
 
