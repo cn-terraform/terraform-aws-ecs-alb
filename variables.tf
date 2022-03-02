@@ -27,6 +27,18 @@ variable "block_s3_bucket_public_access" {
   default     = false
 }
 
+variable "aws_s3_bucket_server_side_encryption_configuration" {
+  description = "(Optional) If true, server side encryption will be applied."
+  type        = bool
+  default     = false
+}
+
+variable "s3_bucket_server_side_encryption_key_arn" {
+  description = "(Optional) Allows the SSE key to use a Customer Managed Key, defaults to the alias and AWS managed key."
+  type        = string
+  default     = "aws/s3"
+}
+
 #------------------------------------------------------------------------------
 # APPLICATION LOAD BALANCER
 #------------------------------------------------------------------------------

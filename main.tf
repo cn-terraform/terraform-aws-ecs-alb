@@ -16,6 +16,19 @@ resource "aws_s3_bucket_acl" "logs" {
   acl    = "log-delivery-write"
 }
 
+resource "aws_s3_bucket_server_side_encryption_configuration" "logs" {
+  count = var.enable_s3_bucket_server_side_encryption ? 1 : 0
+
+  bucket = aws_s3_bucket.logs.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = var.s3_bucket_server_side_encryption_key_arn
+      sse_algorithm     = "aws:kms"
+    }
+  }
+}
+
 #------------------------------------------------------------------------------
 # IAM POLICY DOCUMENT - For access logs to the S3 bucket
 #------------------------------------------------------------------------------
