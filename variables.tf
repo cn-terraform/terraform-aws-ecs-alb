@@ -27,7 +27,7 @@ variable "block_s3_bucket_public_access" {
   default     = false
 }
 
-variable "aws_s3_bucket_server_side_encryption_configuration" {
+variable "enable_s3_bucket_server_side_encryption" {
   description = "(Optional) If true, server side encryption will be applied."
   type        = bool
   default     = false
