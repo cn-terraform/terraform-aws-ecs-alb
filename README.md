@@ -142,4 +142,6 @@ No modules.
 | <a name="output_lb_https_tgs_map_arn_port"></a> [lb\_https\_tgs\_map\_arn\_port](#output\_lb\_https\_tgs\_map\_arn\_port) | n/a |
 | <a name="output_lb_https_tgs_names"></a> [lb\_https\_tgs\_names](#output\_lb\_https\_tgs\_names) | List of HTTPS Target Groups Names |
 | <a name="output_lb_https_tgs_ports"></a> [lb\_https\_tgs\_ports](#output\_lb\_https\_tgs\_ports) | List of HTTPS Target Groups ports |
+| <a name="output_lb_logs_s3_bucket_arn"></a> [lb\_logs\_s3\_bucket\_arn](#output\_lb\_logs\_s3\_bucket\_arn) | LB Logging S3 Bucket ARN |
+| <a name="output_lb_logs_s3_bucket_id"></a> [lb\_logs\_s3\_bucket\_id](#output\_lb\_logs\_s3\_bucket\_id) | LB Logging S3 Bucket ID |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

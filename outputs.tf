@@ -148,3 +148,16 @@ output "lb_https_listeners_arns" {
   description = "List of HTTPS Listeners ARNs"
   value       = [for listener in aws_lb_listener.lb_https_listeners : listener.arn]
 }
+
+#------------------------------------------------------------------------------
+# S3 LB Logging Bucket
+#------------------------------------------------------------------------------
+output "lb_logs_s3_bucket_id" {
+  description = "LB Logging S3 Bucket ID"
+  value       = aws_s3_bucket.logs.id
+}
+
+output "lb_logs_s3_bucket_arn" {
+  description = "LB Logging S3 Bucket ARN"
+  value       = aws_s3_bucket.logs.arn
+}
