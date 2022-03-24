@@ -27,6 +27,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "logs" {
       sse_algorithm     = "aws:kms"
     }
   }
+
+  depends_on = [aws_lb.lb]
 }
 
 #------------------------------------------------------------------------------
