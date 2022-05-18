@@ -59,7 +59,6 @@ data "aws_iam_policy_document" "lb_logs_access_policy_document" {
 
     resources = [
       "${aws_s3_bucket.logs.arn}/*",
-      "arn:aws:s3:::${var.name_prefix}-lb-logs/*",
     ]
   }
 }
