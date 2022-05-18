@@ -1,12 +1,20 @@
 #------------------------------------------------------------------------------
 # S3 BUCKET - For access logs
 #------------------------------------------------------------------------------
+resource "random_string" "random" {
+  length  = 7
+  special = false
+  keepers = {
+    name_prefix = var.name_prefix
+  }
+}
+
 resource "aws_s3_bucket" "logs" {
-  bucket = "${var.name_prefix}-lb-logs"
+  bucket = "${random_string.random.keepers.name_prefix}-lb-logs-${random_string.random.result}"
   tags = merge(
     var.tags,
     {
-      Name = "${var.name_prefix}-lb-logs"
+      Name = "${random_string.random.keepers.name_prefix}-lb-logs-${random_string.random.result}"
     },
   )
 }
