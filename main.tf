@@ -3,6 +3,9 @@
 #------------------------------------------------------------------------------
 resource "random_string" "random" {
   length  = 7
+  lower   = true
+  number  = false
+  upper   = false
   special = false
   keepers = {
     name_prefix = var.name_prefix
@@ -10,11 +13,11 @@ resource "random_string" "random" {
 }
 
 resource "aws_s3_bucket" "logs" {
-  bucket = "${random_string.random.keepers.name_prefix}-lb-logs-${random_string.random.result}"
+  bucket = lower("${random_string.random.keepers.name_prefix}-lb-logs-${random_string.random.result}")
   tags = merge(
     var.tags,
     {
-      Name = "${random_string.random.keepers.name_prefix}-lb-logs-${random_string.random.result}"
+      Name = lower("${random_string.random.keepers.name_prefix}-lb-logs-${random_string.random.result}")
     },
   )
 }
