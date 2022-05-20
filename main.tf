@@ -1,93 +1,23 @@
 #------------------------------------------------------------------------------
 # S3 BUCKET - For access logs
 #------------------------------------------------------------------------------
-resource "random_string" "random" {
-  length  = 7
-  lower   = true
-  number  = false
-  upper   = false
-  special = false
-  keepers = {
-    name_prefix = var.name_prefix
-  }
-}
-
-resource "aws_s3_bucket" "logs" {
-  bucket = lower("${random_string.random.keepers.name_prefix}-lb-logs-${random_string.random.result}")
-  tags = merge(
-    var.tags,
-    {
-      Name = lower("${random_string.random.keepers.name_prefix}-lb-logs-${random_string.random.result}")
-    },
-  )
-}
-
-resource "aws_s3_bucket_acl" "logs" {
-  bucket = aws_s3_bucket.logs.id
-  acl    = "log-delivery-write"
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "logs" {
-  count = var.enable_s3_bucket_server_side_encryption ? 1 : 0
-
-  bucket = aws_s3_bucket.logs.id
-
-  rule {
-    apply_server_side_encryption_by_default {
-      kms_master_key_id = var.s3_bucket_server_side_encryption_key_arn
-      sse_algorithm     = "aws:kms"
-    }
-  }
-
-  depends_on = [aws_lb.lb]
-}
-
-#------------------------------------------------------------------------------
-# IAM POLICY DOCUMENT - For access logs to the S3 bucket
-#------------------------------------------------------------------------------
 data "aws_elb_service_account" "default" {}
 
-data "aws_iam_policy_document" "lb_logs_access_policy_document" {
-  statement {
-    effect = "Allow"
+module "lb_logs_s3" {
+  count = var.enable_s3_logs ? 1 : 0
 
-    principals {
-      type        = "AWS"
-      identifiers = [data.aws_elb_service_account.default.arn]
-    }
+  source  = "cn-terraform/logs-s3-bucket/aws"
+  version = "1.0.0"
+  # source  = "../terraform-aws-logs-s3-bucket"
 
-    actions = [
-      "s3:PutObject",
-    ]
+  name_prefix                                    = "${var.name_prefix}-lb"
+  aws_principals_identifiers                     = [data.aws_elb_service_account.default.arn]
+  block_s3_bucket_public_access                  = var.block_s3_bucket_public_access
+  enable_s3_bucket_server_side_encryption        = var.enable_s3_bucket_server_side_encryption
+  s3_bucket_server_side_encryption_sse_algorithm = var.s3_bucket_server_side_encryption_sse_algorithm
+  s3_bucket_server_side_encryption_key           = var.s3_bucket_server_side_encryption_key
 
-    resources = [
-      "${aws_s3_bucket.logs.arn}/*",
-    ]
-  }
-}
-
-#------------------------------------------------------------------------------
-# IAM POLICY - For access logs to the s3 bucket
-#------------------------------------------------------------------------------
-resource "aws_s3_bucket_policy" "lb_logs_access_policy" {
-  bucket = aws_s3_bucket.logs.id
-  policy = data.aws_iam_policy_document.lb_logs_access_policy_document.json
-}
-
-#------------------------------------------------------------------------------
-# S3 bucket block public access
-#------------------------------------------------------------------------------
-resource "aws_s3_bucket_public_access_block" "lb_logs_block_public_access" {
-  count = var.block_s3_bucket_public_access ? 1 : 0
-
-  bucket = aws_s3_bucket.logs.id
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-
-  depends_on = [aws_s3_bucket_policy.lb_logs_access_policy]
+  tags = var.tags
 }
 
 #------------------------------------------------------------------------------
@@ -108,9 +38,12 @@ resource "aws_lb" "lb" {
     concat(var.security_groups, [aws_security_group.lb_access_sg.id]),
   )
 
-  access_logs {
-    bucket  = aws_s3_bucket.logs.id
-    enabled = true
+  dynamic "access_logs" {
+    for_each = var.enable_s3_logs ? [1] : []
+    content {
+      bucket  = module.lb_logs_s3[0].lb_logs_s3_bucket_id
+      enabled = var.enable_s3_logs
+    }
   }
 
   tags = merge(
