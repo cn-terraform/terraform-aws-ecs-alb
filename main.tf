@@ -41,7 +41,7 @@ resource "aws_lb" "lb" {
   dynamic "access_logs" {
     for_each = var.enable_s3_logs ? [1] : []
     content {
-      bucket  = module.lb_logs_s3[0].lb_logs_s3_bucket_id
+      bucket  = module.lb_logs_s3[0].s3_bucket_id
       enabled = var.enable_s3_logs
     }
   }
