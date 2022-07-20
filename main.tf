@@ -232,7 +232,7 @@ resource "aws_lb_listener" "lb_http_listeners" {
       type             = "forward"
     }
   }
-  
+
   dynamic "lifecycle" {
     for_each = (lookup(each.value, "type", "") == "" || lookup(each.value, "type", "") == "forward") ? [1] : []
     replace_triggered_by {
