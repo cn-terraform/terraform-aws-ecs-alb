@@ -23,8 +23,16 @@ module "lb_logs_s3" {
 #------------------------------------------------------------------------------
 # APPLICATION LOAD BALANCER
 #------------------------------------------------------------------------------
+resource "random_string" "lb_name" {
+  count   = var.use_random_name_for_lb ? 1 : 0
+  length  = 32
+  numeric = true
+  special = false
+}
+
 resource "aws_lb" "lb" {
-  name                             = "${var.name_prefix}-lb"
+  name = var.use_random_name_for_lb ? random_string.lb_name[0].result : substr("${var.name_prefix}-lb", 0, 31)
+
   internal                         = var.internal
   load_balancer_type               = "application"
   drop_invalid_header_fields       = var.drop_invalid_header_fields

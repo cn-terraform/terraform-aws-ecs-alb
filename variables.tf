@@ -5,6 +5,12 @@ variable "name_prefix" {
   description = "Name prefix for resources on AWS"
 }
 
+variable "use_random_name_for_lb" {
+  description = "If true the LB name will be a random string"
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   type        = map(string)
   default     = {}
