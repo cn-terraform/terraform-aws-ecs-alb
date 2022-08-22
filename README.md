@@ -65,6 +65,7 @@ In order to run all checks at any point run the following command:
 | [aws_security_group.lb_access_sg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_security_group_rule.ingress_through_http](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.ingress_through_https](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_wafv2_web_acl_association.waf_association](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_web_acl_association) | resource |
 | [random_string.lb_name](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [aws_elb_service_account.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/elb_service_account) | data source |
 
@@ -111,6 +112,7 @@ In order to run all checks at any point run the following command:
 | <a name="input_target_group_health_check_unhealthy_threshold"></a> [target\_group\_health\_check\_unhealthy\_threshold](#input\_target\_group\_health\_check\_unhealthy\_threshold) | (Optional) The number of consecutive health check failures required before considering the target unhealthy. Defaults to 3. | `number` | `3` | no |
 | <a name="input_use_random_name_for_lb"></a> [use\_random\_name\_for\_lb](#input\_use\_random\_name\_for\_lb) | If true the LB name will be a random string | `bool` | `false` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | ID of the VPC | `any` | n/a | yes |
+| <a name="input_waf_web_acl_arn"></a> [waf\_web\_acl\_arn](#input\_waf\_web\_acl\_arn) | ARN of a WAFV2 to associate with the ALB | `string` | `""` | no |
 
 ## Outputs
 

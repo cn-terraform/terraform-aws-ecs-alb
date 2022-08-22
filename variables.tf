@@ -119,7 +119,7 @@ variable "ip_address_type" {
 }
 
 variable "waf_web_acl_arn" {
-  description = "if you want to associate ALB with WAFV2"
+  description = "ARN of a WAFV2 to associate with the ALB"
   type        = string
   default     = ""
 }
