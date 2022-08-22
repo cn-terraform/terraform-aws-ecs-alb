@@ -62,6 +62,12 @@ resource "aws_lb" "lb" {
   )
 }
 
+resource "aws_wafv2_web_acl_association" "waf_association" {
+  count        = var.waf_web_acl_arn != "" ? 1 : 0
+  resource_arn = aws_lb.lb.arn
+  web_acl_arn  = var.waf_web_acl_arn
+}
+
 #------------------------------------------------------------------------------
 # ACCESS CONTROL TO APPLICATION LOAD BALANCER
 #------------------------------------------------------------------------------
