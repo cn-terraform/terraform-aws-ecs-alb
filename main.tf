@@ -7,7 +7,7 @@ module "lb_logs_s3" {
   count = var.enable_s3_logs ? 1 : 0
 
   source  = "cn-terraform/logs-s3-bucket/aws"
-  version = "1.0.3"
+  version = "1.0.4"
   # source  = "../terraform-aws-logs-s3-bucket"
 
   name_prefix                                    = "${var.name_prefix}-lb"
