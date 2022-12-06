@@ -27,8 +27,14 @@ variable "vpc_id" {
 #------------------------------------------------------------------------------
 # S3 logs bucket
 #------------------------------------------------------------------------------
+variable "log_bucket_id" {
+  description = "(Optional) if provided, the ID of a previously-defined S3 bucket to send these LB logs to.  Mutually exclusive with 'enable_s3_logs'"
+  type        = string
+  default     = ""
+}
+
 variable "enable_s3_logs" {
-  description = "(Optional) If true, all resources to send LB logs to S3 will be created"
+  description = "(Optional) If true, all resources to send LB logs to S3 will be created. Mutually exclusive with 'log_bucket_id'"
   type        = bool
   default     = true
 }
@@ -53,6 +59,12 @@ variable "s3_bucket_server_side_encryption_sse_algorithm" {
 
 variable "s3_bucket_server_side_encryption_key" {
   description = "(Optional) The AWS KMS master key ID used for the SSE-KMS encryption. This can only be used when you set the value of sse_algorithm as aws:kms. The default aws/s3 AWS KMS master key is used if this element is absent while the sse_algorithm is aws:kms."
+  type        = string
+  default     = null
+}
+
+variable "access_logs_prefix" {
+  description = "(Optional) if access logging to an S3 bucket, this sets a prefix in the bucket beneath which this LB's logs will be organized"
   type        = string
   default     = null
 }
