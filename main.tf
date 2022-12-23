@@ -4,11 +4,11 @@
 data "aws_elb_service_account" "default" {}
 
 module "lb_logs_s3" {
-  count = var.enable_s3_logs ? 1 : 0
+  # If we enable S3 Logs for the ALB, but don't provide our own bucket, create one as part of this module
+  count = var.enable_s3_logs && var.log_bucket_id == null ? 1 : 0
 
   source  = "cn-terraform/logs-s3-bucket/aws"
   version = "1.0.5"
-  # source  = "../terraform-aws-logs-s3-bucket"
 
   name_prefix                                    = "${var.name_prefix}-lb"
   aws_principals_identifiers                     = [data.aws_elb_service_account.default.arn]
@@ -49,7 +49,7 @@ resource "aws_lb" "lb" {
   dynamic "access_logs" {
     for_each = var.enable_s3_logs ? [1] : []
     content {
-      bucket  = module.lb_logs_s3[0].s3_bucket_id
+      bucket  = var.log_bucket_id == null ? module.lb_logs_s3[0].s3_bucket_id : var.log_bucket_id
       enabled = var.enable_s3_logs
       prefix  = var.access_logs_prefix
     }
