@@ -157,10 +157,10 @@ output "lb_https_listeners_arns" {
 #------------------------------------------------------------------------------
 output "lb_logs_s3_bucket_id" {
   description = "LB Logging S3 Bucket ID"
-  value       = (var.enable_s3_logs && !var.log_bucket_id) ? module.lb_logs_s3[0].s3_bucket_id : null
+  value       = (var.enable_s3_logs && var.log_bucket_id == null) ? module.lb_logs_s3[0].s3_bucket_id : null
 }
 
 output "lb_logs_s3_bucket_arn" {
   description = "LB Logging S3 Bucket ARN"
-  value       = (var.enable_s3_logs && !var.log_bucket_id) ? module.lb_logs_s3[0].s3_bucket_arn : null
+  value       = (var.enable_s3_logs && var.log_bucket_id == null) ? module.lb_logs_s3[0].s3_bucket_arn : null
 }
