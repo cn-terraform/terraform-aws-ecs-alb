@@ -55,15 +55,6 @@ resource "aws_lb" "lb" {
     }
   }
 
-  dynamic "access_logs" {
-    for_each = var.log_bucket_id == "" ? [] : [1]
-    content {
-      bucket  = var.log_bucket_id
-      enabled = true
-      prefix  = var.access_logs_prefix
-    }
-  }
-
   tags = merge(
     var.tags,
     {
