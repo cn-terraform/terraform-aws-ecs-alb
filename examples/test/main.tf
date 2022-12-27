@@ -14,4 +14,6 @@ module "load_balancer" {
   vpc_id          = module.base-network.vpc_id
   private_subnets = module.base-network.private_subnets_ids
   public_subnets  = module.base-network.public_subnets_ids
+  enable_s3_logs  = true
+  log_bucket_id   = null
 }
