@@ -19,11 +19,11 @@ This terraform module creates an Application Load Balancer and security group ru
 
 ## Install pre commit hooks.
 
-Pleas run this command right after cloning the repository.
+Please run this command right after cloning the repository.
 
         pre-commit install
 
-For that you may need to install the folowwing tools:
+For that you may need to install the following tools:
 * [Pre-commit](https://pre-commit.com/) 
 * [Terraform Docs](https://terraform-docs.io/)
 
@@ -43,8 +43,8 @@ In order to run all checks at any point run the following command:
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.24.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.3.2 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.48.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.4.3 |
 
 ## Modules
 

@@ -1,5 +1,9 @@
+locals {
+  bucket_id = "my-tf-test-bucket"
+}
+
 resource "aws_s3_bucket" "bucket" {
-  bucket = "my-tf-test-bucket"
+  bucket = local.bucket_id
 }
 
 module "load_balancer_bring_your_own_bucket" {
@@ -8,5 +12,5 @@ module "load_balancer_bring_your_own_bucket" {
   vpc_id          = module.base-network.vpc_id
   private_subnets = module.base-network.private_subnets_ids
   public_subnets  = module.base-network.public_subnets_ids
-  log_bucket_id   = aws_s3_bucket.bucket.id
+  log_bucket_id   = local.bucket_id
 }
