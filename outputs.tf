@@ -151,13 +151,16 @@ output "lb_https_listeners_arns" {
 
 #------------------------------------------------------------------------------
 # S3 LB Logging Bucket
+# Bucket ID and ARN are not emitted if you "bring your own bucket" by providing
+# a var.log_bucket_id to this module because the caller already knows the ID (and,
+# presumably, the ARN)
 #------------------------------------------------------------------------------
 output "lb_logs_s3_bucket_id" {
   description = "LB Logging S3 Bucket ID"
-  value       = var.enable_s3_logs ? module.lb_logs_s3[0].s3_bucket_id : null
+  value       = (var.enable_s3_logs && var.log_bucket_id == null) ? module.lb_logs_s3[0].s3_bucket_id : null
 }
 
 output "lb_logs_s3_bucket_arn" {
   description = "LB Logging S3 Bucket ARN"
-  value       = var.enable_s3_logs ? module.lb_logs_s3[0].s3_bucket_arn : null
+  value       = (var.enable_s3_logs && var.log_bucket_id == null) ? module.lb_logs_s3[0].s3_bucket_arn : null
 }
