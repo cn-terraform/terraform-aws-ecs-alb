@@ -143,7 +143,7 @@ variable "http_ports" {
   description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
   type        = map(any)
   default = {
-    default_http = {
+    default = {
       type              = "forward"
       listener_port     = 80
       target_group_port = 80
@@ -155,7 +155,7 @@ variable "https_ports" {
   description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
   type        = map(any)
   default = {
-    default_http = {
+    default = {
       type              = "forward"
       listener_port     = 443
       target_group_port = 443
@@ -170,7 +170,7 @@ Other options for listeners (The same are valid also for https_ports variable):
     description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
     type        = map(any)
     default = {
-      force_https = {
+      force-https = {
         type          = "redirect"
         listener_port = 80
         host          = "#{host}"
@@ -188,7 +188,7 @@ Fixed response:
     description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
     type        = map(any)
     default = {
-      fixed_response = {
+      fixed-response = {
         type          = "fixed-response"
         listener_port = 80
         content_type  = "text/plain"
@@ -204,7 +204,7 @@ Additionally, you can have an HTTPS listener forwarding traffic to an HTTP targe
     description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
     type        = map(any)
     default = {
-      https_listener_to_http_target_group = {
+      https-to-http-tg = {
         type                  = "forward"
         listener_port         = 443
         target_group_port     = 80
