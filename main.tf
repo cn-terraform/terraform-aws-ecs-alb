@@ -251,7 +251,6 @@ resource "aws_lb_listener" "lb_http_listeners" {
   lifecycle {
     ignore_changes = [
       default_action #Can be changed by CodeDeploy when used with Fargate
-#      target_group_arn #Can be changed by CodeDeploy when used with Fargate
     ]
   }
 
@@ -302,6 +301,12 @@ resource "aws_lb_listener" "lb_https_listeners" {
       target_group_arn = aws_lb_target_group.lb_https_tgs[each.key].arn
       type             = "forward"
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      default_action #Can be changed by CodeDeploy when used with Fargate
+    ]
   }
 
   tags = var.tags
