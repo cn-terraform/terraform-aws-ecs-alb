@@ -248,6 +248,12 @@ resource "aws_lb_listener" "lb_http_listeners" {
     }
   }
 
+  lifecycle {
+    ignore_changes = [
+      target_group_arn #Can be changed by CodeDeploy when used with Fargate
+    ]
+  }
+
   tags = var.tags
 }
 
