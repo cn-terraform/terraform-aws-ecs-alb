@@ -182,7 +182,7 @@ resource "aws_lb_target_group" "lb_https_tgs" {
     enabled             = var.target_group_health_check_enabled
     interval            = var.target_group_health_check_interval
     path                = var.target_group_health_check_path
-    protocol            = lookup(each.value, "target_group_protocol", "HTTPS")
+    protocol            = lookup(each.value, "target_group_protocol", "HTTP")
     timeout             = var.target_group_health_check_timeout
     healthy_threshold   = var.target_group_health_check_healthy_threshold
     unhealthy_threshold = var.target_group_health_check_unhealthy_threshold
