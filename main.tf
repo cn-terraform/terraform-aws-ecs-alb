@@ -8,7 +8,7 @@ module "lb_logs_s3" {
   count = var.enable_s3_logs && var.log_bucket_id == null ? 1 : 0
 
   source  = "cn-terraform/logs-s3-bucket/aws"
-  version = "1.0.5"
+  version = "1.0.6"
 
   name_prefix                                    = "${var.name_prefix}-lb"
   aws_principals_identifiers                     = [data.aws_elb_service_account.default.arn]
