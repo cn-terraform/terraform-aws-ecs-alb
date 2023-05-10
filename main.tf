@@ -303,8 +303,8 @@ resource "aws_lb_listener" "lb_https_listeners" {
 locals {
   list_maps_listener_certificate_arns = flatten([
     for cert_arn in var.additional_certificates_arn_for_https_listeners : [
-      for listener in aws_lb_listener.lb_https_listeners : {
-        name            = "${listener}-${cert_arn}"
+      for index, listener in aws_lb_listener.lb_https_listeners : {
+        name            = "listener-${index}-${listener.protocol}-${listener.port}"
         listener_arn    = listener.arn
         certificate_arn = cert_arn
       }
