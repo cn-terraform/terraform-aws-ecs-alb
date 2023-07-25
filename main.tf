@@ -8,7 +8,7 @@ module "lb_logs_s3" {
   count = var.enable_s3_logs && var.log_bucket_id == null ? 1 : 0
 
   source  = "cn-terraform/logs-s3-bucket/aws"
-  version = "1.0.5"
+  version = "1.0.6"
 
   name_prefix                                    = "${var.name_prefix}-lb"
   aws_principals_identifiers                     = [data.aws_elb_service_account.default.arn]
@@ -315,8 +315,8 @@ resource "aws_lb_listener" "lb_https_listeners" {
 locals {
   list_maps_listener_certificate_arns = flatten([
     for cert_arn in var.additional_certificates_arn_for_https_listeners : [
-      for listener in aws_lb_listener.lb_https_listeners : {
-        name            = "${listener}-${cert_arn}"
+      for index, listener in aws_lb_listener.lb_https_listeners : {
+        name            = "listener-${index}-${listener.protocol}-${listener.port}"
         listener_arn    = listener.arn
         certificate_arn = cert_arn
       }
