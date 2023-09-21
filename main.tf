@@ -165,7 +165,7 @@ resource "aws_lb_target_group" "lb_https_tgs" {
   }
   name                          = "${var.name_prefix}-${each.key}-https-${each.value.target_group_port}"
   port                          = each.value.target_group_port
-  protocol                      = lookup(each.value, "target_group_protocol", "HTTPS")
+  protocol                      = lookup(each.value, "target_group_protocol", "HTTP")
   vpc_id                        = var.vpc_id
   deregistration_delay          = var.deregistration_delay
   slow_start                    = var.slow_start
@@ -182,7 +182,7 @@ resource "aws_lb_target_group" "lb_https_tgs" {
     enabled             = var.target_group_health_check_enabled
     interval            = var.target_group_health_check_interval
     path                = var.target_group_health_check_path
-    protocol            = lookup(each.value, "target_group_protocol", "HTTPS")
+    protocol            = lookup(each.value, "target_group_protocol", "HTTP")
     timeout             = var.target_group_health_check_timeout
     healthy_threshold   = var.target_group_health_check_healthy_threshold
     unhealthy_threshold = var.target_group_health_check_unhealthy_threshold
@@ -248,6 +248,12 @@ resource "aws_lb_listener" "lb_http_listeners" {
     }
   }
 
+  lifecycle {
+    ignore_changes = [
+      default_action #Can be changed by CodeDeploy when used with Fargate
+    ]
+  }
+
   tags = var.tags
 }
 
@@ -295,6 +301,12 @@ resource "aws_lb_listener" "lb_https_listeners" {
       target_group_arn = aws_lb_target_group.lb_https_tgs[each.key].arn
       type             = "forward"
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      default_action #Can be changed by CodeDeploy when used with Fargate
+    ]
   }
 
   tags = var.tags
