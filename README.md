@@ -11,7 +11,7 @@ Test Continuous Integration/Delivery environment on AWS ECS.
 
 ## Use this code as a Terraform module
 
-Check valid versions on:
+Check valid versions on: 
 * Github Releases: <https://github.com/cn-terraform/terraform-aws-ecs-alb/releases>
 * Terraform Module Registry: <https://registry.terraform.io/modules/cn-terraform/ecs-alb/aws>
 
