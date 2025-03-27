@@ -144,9 +144,12 @@ variable "http_ports" {
   type        = map(any)
   default = {
     default = {
-      type              = "forward"
-      listener_port     = 80
-      target_group_port = 80
+      type                  = "forward"
+      listener_port         = 80
+      target_group_port     = 80
+      target_group_protocol = "HTTP"
+      # HTTP1, HTTP2 or GRPC
+      target_group_protocol_version = "HTTP1"
     }
   }
 }
@@ -156,9 +159,12 @@ variable "https_ports" {
   type        = map(any)
   default = {
     default = {
-      type              = "forward"
-      listener_port     = 443
-      target_group_port = 443
+      type                  = "forward"
+      listener_port         = 443
+      target_group_port     = 443
+      target_group_protocol = "HTTP"
+      # HTTP1, HTTP2 or GRPC
+      target_group_protocol_version = "HTTP1"
     }
   }
 }
