@@ -292,6 +292,12 @@ variable "target_group_health_check_path" {
   default     = "/"
 }
 
+variable "target_group_health_check_port" {
+  description = "(Optional) The port to use to connect with the target. Valid values are either ports 1-65536, or traffic-port. Defaults to traffic-port."
+  type        = string
+  default     = "traffic-port"
+}
+
 variable "target_group_health_check_timeout" {
   description = "(Optional) The amount of time, in seconds, during which no response means a failed health check. The range is 2 to 120 seconds, and the default is 5 seconds."
   type        = number
