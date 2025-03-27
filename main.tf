@@ -123,6 +123,7 @@ resource "aws_lb_target_group" "lb_http_tgs" {
   name                          = "${var.name_prefix}-${each.key}-http-${each.value.target_group_port}"
   port                          = each.value.target_group_port
   protocol                      = lookup(each.value, "target_group_protocol", "HTTP")
+  protocol_version              = lookup(each.value, "target_group_protocol_version", "HTTP1")
   vpc_id                        = var.vpc_id
   deregistration_delay          = var.deregistration_delay
   slow_start                    = var.slow_start
@@ -139,6 +140,7 @@ resource "aws_lb_target_group" "lb_http_tgs" {
     enabled             = var.target_group_health_check_enabled
     interval            = var.target_group_health_check_interval
     path                = var.target_group_health_check_path
+    port                = var.target_group_health_check_port
     protocol            = lookup(each.value, "target_group_protocol", "HTTP")
     timeout             = var.target_group_health_check_timeout
     healthy_threshold   = var.target_group_health_check_healthy_threshold
@@ -166,6 +168,7 @@ resource "aws_lb_target_group" "lb_https_tgs" {
   name                          = "${var.name_prefix}-${each.key}-https-${each.value.target_group_port}"
   port                          = each.value.target_group_port
   protocol                      = lookup(each.value, "target_group_protocol", "HTTP")
+  protocol_version              = lookup(each.value, "target_group_protocol_version", "HTTP1")
   vpc_id                        = var.vpc_id
   deregistration_delay          = var.deregistration_delay
   slow_start                    = var.slow_start
