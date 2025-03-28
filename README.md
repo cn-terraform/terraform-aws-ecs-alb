@@ -43,7 +43,7 @@ In order to run all checks at any point run the following command:
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.92.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.93.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.7.1 |
 
 ## Modules
