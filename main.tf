@@ -115,12 +115,41 @@ resource "aws_security_group_rule" "ingress_through_https" {
 #------------------------------------------------------------------------------
 # AWS LOAD BALANCER - Target Groups
 #------------------------------------------------------------------------------
+resource "null_resource" "lb_http_tgs_config" {
+  for_each = {
+    for name, config in var.http_ports : name => config
+    if lookup(config, "type", "") == "" || lookup(config, "type", "") == "forward"
+  }
+
+  triggers = {
+    # Store the md5 of the config so that if anything in `each.value` changes,
+    # the trigger changes and thus the resource changes.
+    config_md5 = md5(jsonencode(each.value))
+  }
+}
+
+resource "random_id" "lb_http_tgs_id" {
+  for_each = {
+    for name, config in var.http_ports : name => config
+    if lookup(config, "type", "") == "" || lookup(config, "type", "") == "forward"
+  }
+
+  byte_length = 2
+
+  lifecycle {
+    # Trigger a replacement whenever the configuration changes.
+    replace_triggered_by = [
+      null_resource.lb_http_tgs_config[each.key],
+    ]
+  }
+}
+
 resource "aws_lb_target_group" "lb_http_tgs" {
   for_each = {
     for name, config in var.http_ports : name => config
     if lookup(config, "type", "") == "" || lookup(config, "type", "") == "forward"
   }
-  name                          = "${var.name_prefix}-${each.key}-http-${each.value.target_group_port}"
+  name                          = "${var.name_prefix}-http-${each.value.target_group_port}-${random_id.lb_http_tgs_id[each.key].hex}"
   port                          = each.value.target_group_port
   protocol                      = lookup(each.value, "target_group_protocol", "HTTP")
   protocol_version              = lookup(each.value, "target_group_protocol_version", "HTTP1")
@@ -151,13 +180,44 @@ resource "aws_lb_target_group" "lb_http_tgs" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.name_prefix}-${each.key}-http-${each.value.target_group_port}"
+      Name = "${var.name_prefix}-http-${each.value.target_group_port}-${random_id.lb_http_tgs_id[each.key].hex}"
     },
   )
   lifecycle {
+    // Trigger a replacement whenever the configuration changes.
+    // Creates a new target group with a new name and deletes the old one once the new one is created.
     create_before_destroy = true
   }
   depends_on = [aws_lb.lb]
+}
+
+resource "null_resource" "lb_https_tgs_config" {
+  for_each = {
+    for name, config in var.https_ports : name => config
+    if lookup(config, "type", "") == "" || lookup(config, "type", "") == "forward"
+  }
+
+  triggers = {
+    # Store the md5 of the config so that if anything in `each.value` changes,
+    # the trigger changes and thus the resource changes.
+    config_md5 = md5(jsonencode(each.value))
+  }
+}
+
+resource "random_id" "lb_https_tgs_id" {
+  for_each = {
+    for name, config in var.https_ports : name => config
+    if lookup(config, "type", "") == "" || lookup(config, "type", "") == "forward"
+  }
+
+  byte_length = 2
+
+  lifecycle {
+    # Trigger a replacement whenever the configuration changes.
+    replace_triggered_by = [
+      null_resource.lb_https_tgs_config[each.key],
+    ]
+  }
 }
 
 resource "aws_lb_target_group" "lb_https_tgs" {
@@ -165,7 +225,7 @@ resource "aws_lb_target_group" "lb_https_tgs" {
     for name, config in var.https_ports : name => config
     if lookup(config, "type", "") == "" || lookup(config, "type", "") == "forward"
   }
-  name                          = "${var.name_prefix}-${each.key}-https-${each.value.target_group_port}"
+  name                          = "${var.name_prefix}-https-${each.value.target_group_port}-${random_id.lb_https_tgs_id[each.key].hex}"
   port                          = each.value.target_group_port
   protocol                      = lookup(each.value, "target_group_protocol", "HTTP")
   protocol_version              = lookup(each.value, "target_group_protocol_version", "HTTP1")
@@ -196,10 +256,12 @@ resource "aws_lb_target_group" "lb_https_tgs" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.name_prefix}-${each.key}-https-${each.value.target_group_port}"
+      Name = "${var.name_prefix}-https-${each.value.target_group_port}-${random_id.lb_https_tgs_id[each.key].hex}"
     },
   )
   lifecycle {
+    // Trigger a replacement whenever the configuration changes.
+    // Creates a new target group with a new name and deletes the old one once the new one is created.
     create_before_destroy = true
   }
   depends_on = [aws_lb.lb]
