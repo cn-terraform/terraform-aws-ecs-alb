@@ -146,30 +146,58 @@ variable "waf_web_acl_arn" {
 #------------------------------------------------------------------------------
 variable "http_ports" {
   description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
-  type        = map(any)
+  type = map(object({
+    type = optional(string)
+
+    listener_port     = number
+    target_group_port = number
+
+    target_group_protocol         = optional(string, "HTTP")
+    target_group_protocol_version = optional(string, "HTTP1") # HTTP1, HTTP2 or GRPC
+
+    host         = optional(string, "#{host}")
+    path         = optional(string, "/#{path}")
+    port         = optional(string, "#{port}")
+    protocol     = optional(string, "#{protocol}")
+    query        = optional(string, "#{query}")
+    status_code  = optional(string) # Default for `type=redirect`: "HTTP_301". Default for `type=fixed-response`: "200".
+    content_type = optional(string, "text/plain")
+    message_body = optional(string, "Fixed response content")
+  }))
   default = {
     default = {
-      type                  = "forward"
-      listener_port         = 80
-      target_group_port     = 80
-      target_group_protocol = "HTTP"
-      # HTTP1, HTTP2 or GRPC
-      target_group_protocol_version = "HTTP1"
+      type              = "forward"
+      listener_port     = 80
+      target_group_port = 80
     }
   }
 }
 
 variable "https_ports" {
   description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
-  type        = map(any)
+  type = map(object({
+    type = optional(string)
+
+    listener_port     = number
+    target_group_port = number
+
+    target_group_protocol         = optional(string, "HTTP")
+    target_group_protocol_version = optional(string, "HTTP1") # HTTP1, HTTP2 or GRPC
+
+    host         = optional(string, "#{host}")
+    path         = optional(string, "/#{path}")
+    port         = optional(string, "#{port}")
+    protocol     = optional(string, "#{protocol}")
+    query        = optional(string, "#{query}")
+    status_code  = optional(string) # Default for `type=redirect`: "HTTP_301". Default for `type=fixed-response`: "200".
+    content_type = optional(string, "text/plain")
+    message_body = optional(string, "Fixed response content")
+  }))
   default = {
     default = {
-      type                  = "forward"
-      listener_port         = 443
-      target_group_port     = 443
-      target_group_protocol = "HTTP"
-      # HTTP1, HTTP2 or GRPC
-      target_group_protocol_version = "HTTP1"
+      type              = "forward"
+      listener_port     = 443
+      target_group_port = 443
     }
   }
 }

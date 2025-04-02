@@ -282,11 +282,11 @@ resource "aws_lb_listener" "lb_http_listeners" {
       type = "redirect"
 
       redirect {
-        host        = lookup(each.value, "host", "#{host}")
-        path        = lookup(each.value, "path", "/#{path}")
-        port        = lookup(each.value, "port", "#{port}")
-        protocol    = lookup(each.value, "protocol", "#{protocol}")
-        query       = lookup(each.value, "query", "#{query}")
+        host        = each.value.host
+        path        = each.value.path
+        port        = each.value.port
+        protocol    = each.value.protocol
+        query       = each.value.query
         status_code = lookup(each.value, "status_code", "HTTP_301")
       }
     }
@@ -298,8 +298,8 @@ resource "aws_lb_listener" "lb_http_listeners" {
       type = "fixed-response"
 
       fixed_response {
-        content_type = lookup(each.value, "content_type", "text/plain")
-        message_body = lookup(each.value, "message_body", "Fixed response content")
+        content_type = each.value.content_type
+        message_body = each.value.message_body
         status_code  = lookup(each.value, "status_code", "200")
       }
     }
@@ -337,11 +337,11 @@ resource "aws_lb_listener" "lb_https_listeners" {
       type = "redirect"
 
       redirect {
-        host        = lookup(each.value, "host", "#{host}")
-        path        = lookup(each.value, "path", "/#{path}")
-        port        = lookup(each.value, "port", "#{port}")
-        protocol    = lookup(each.value, "protocol", "#{protocol}")
-        query       = lookup(each.value, "query", "#{query}")
+        host        = each.value.host
+        path        = each.value.path
+        port        = each.value.port
+        protocol    = each.value.protocol
+        query       = each.value.query
         status_code = lookup(each.value, "status_code", "HTTP_301")
       }
     }
@@ -353,8 +353,8 @@ resource "aws_lb_listener" "lb_https_listeners" {
       type = "fixed-response"
 
       fixed_response {
-        content_type = lookup(each.value, "content_type", "text/plain")
-        message_body = lookup(each.value, "message_body", "Fixed response content")
+        content_type = each.value.content_type
+        message_body = each.value.message_body
         status_code  = lookup(each.value, "status_code", "200")
       }
     }
