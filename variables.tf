@@ -384,7 +384,7 @@ variable "target_group_health_check_unhealthy_threshold" {
 }
 
 variable "target_group_health_check_matcher" {
-  description = "The HTTP codes to use when checking for a successful response from a target. You can specify multiple values (for example, \"200,202\") or a range of values (for example, \"200-299\"). Default is 200."
+  description = "The codes to use when checking for a successful response from a target. You can specify multiple values (for example, \"200,202\") or a range of values (for example, \"200-299\"). If the protocol version is set to \"GRPC\" the range is different from HTTP and HTTPS. The allowed range of codes for GRPC is \"0-99\". The default value is \"200\"."
   type        = string
   default     = "200"
 }
