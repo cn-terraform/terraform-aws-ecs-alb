@@ -2,7 +2,12 @@
 # Misc
 #------------------------------------------------------------------------------
 variable "name_prefix" {
-  description = "Name prefix for resources on AWS"
+  description = "Name prefix for resources on AWS. Max length is 15 characters."
+  type        = string
+  validation {
+    condition     = length(var.name_prefix) <= 15
+    error_message = "The name prefix must be 15 characters or less."
+  }
 }
 
 variable "use_random_name_for_lb" {
@@ -141,30 +146,80 @@ variable "waf_web_acl_arn" {
 #------------------------------------------------------------------------------
 variable "http_ports" {
   description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
-  type        = map(any)
+  type = map(object({
+    type = optional(string)
+
+    listener_port     = number
+    target_group_port = number
+
+    target_group_protocol         = optional(string, "HTTP")
+    target_group_protocol_version = optional(string, "HTTP1") # HTTP1, HTTP2 or GRPC
+
+    # Health check options, overriding default values provided as module variables
+    target_group_health_check_enabled             = optional(bool)
+    target_group_health_check_interval            = optional(number)
+    target_group_health_check_path                = optional(string)
+    target_group_health_check_port                = optional(string)
+    target_group_health_check_protocol            = optional(string, "HTTP")
+    target_group_health_check_timeout             = optional(number)
+    target_group_health_check_healthy_threshold   = optional(number)
+    target_group_health_check_unhealthy_threshold = optional(number)
+    target_group_health_check_matcher             = optional(string)
+
+    host         = optional(string, "#{host}")
+    path         = optional(string, "/#{path}")
+    port         = optional(string, "#{port}")
+    protocol     = optional(string, "#{protocol}")
+    query        = optional(string, "#{query}")
+    status_code  = optional(string) # Default for `type=redirect`: "HTTP_301". Default for `type=fixed-response`: "200".
+    content_type = optional(string, "text/plain")
+    message_body = optional(string, "Fixed response content")
+  }))
   default = {
     default = {
-      type                  = "forward"
-      listener_port         = 80
-      target_group_port     = 80
-      target_group_protocol = "HTTP"
-      # HTTP1, HTTP2 or GRPC
-      target_group_protocol_version = "HTTP1"
+      type              = "forward"
+      listener_port     = 80
+      target_group_port = 80
     }
   }
 }
 
 variable "https_ports" {
   description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
-  type        = map(any)
+  type = map(object({
+    type = optional(string)
+
+    listener_port     = number
+    target_group_port = number
+
+    target_group_protocol         = optional(string, "HTTP")
+    target_group_protocol_version = optional(string, "HTTP1") # HTTP1, HTTP2 or GRPC
+
+    # Health check options, overriding default values provided as module variables
+    target_group_health_check_enabled             = optional(bool)
+    target_group_health_check_interval            = optional(number)
+    target_group_health_check_path                = optional(string)
+    target_group_health_check_port                = optional(string)
+    target_group_health_check_protocol            = optional(string, "HTTP")
+    target_group_health_check_timeout             = optional(number)
+    target_group_health_check_healthy_threshold   = optional(number)
+    target_group_health_check_unhealthy_threshold = optional(number)
+    target_group_health_check_matcher             = optional(string)
+
+    host         = optional(string, "#{host}")
+    path         = optional(string, "/#{path}")
+    port         = optional(string, "#{port}")
+    protocol     = optional(string, "#{protocol}")
+    query        = optional(string, "#{query}")
+    status_code  = optional(string) # Default for `type=redirect`: "HTTP_301". Default for `type=fixed-response`: "200".
+    content_type = optional(string, "text/plain")
+    message_body = optional(string, "Fixed response content")
+  }))
   default = {
     default = {
-      type                  = "forward"
-      listener_port         = 443
-      target_group_port     = 443
-      target_group_protocol = "HTTP"
-      # HTTP1, HTTP2 or GRPC
-      target_group_protocol_version = "HTTP1"
+      type              = "forward"
+      listener_port     = 443
+      target_group_port = 443
     }
   }
 }
@@ -304,6 +359,12 @@ variable "target_group_health_check_port" {
   default     = "traffic-port"
 }
 
+variable "target_group_health_check_protocol" {
+  description = "(Optional) The protocol the load balancer uses when performing health checks on targets. Valid values are HTTP and HTTPS. Defaults to HTTP."
+  type        = string
+  default     = "HTTP"
+}
+
 variable "target_group_health_check_timeout" {
   description = "(Optional) The amount of time, in seconds, during which no response means a failed health check. The range is 2 to 120 seconds, and the default is 5 seconds."
   type        = number
@@ -323,7 +384,7 @@ variable "target_group_health_check_unhealthy_threshold" {
 }
 
 variable "target_group_health_check_matcher" {
-  description = "The HTTP codes to use when checking for a successful response from a target. You can specify multiple values (for example, \"200,202\") or a range of values (for example, \"200-299\"). Default is 200."
+  description = "The codes to use when checking for a successful response from a target. You can specify multiple values (for example, \"200,202\") or a range of values (for example, \"200-299\"). If the protocol version is set to \"GRPC\" the range is different from HTTP and HTTPS. The allowed range of codes for GRPC is \"0-99\". The default value is \"200\"."
   type        = string
   default     = "200"
 }
