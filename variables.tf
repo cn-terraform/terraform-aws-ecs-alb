@@ -155,6 +155,17 @@ variable "http_ports" {
     target_group_protocol         = optional(string, "HTTP")
     target_group_protocol_version = optional(string, "HTTP1") # HTTP1, HTTP2 or GRPC
 
+    # Health check options, overriding default values provided as module variables
+    target_group_health_check_enabled             = optional(bool)
+    target_group_health_check_interval            = optional(number)
+    target_group_health_check_path                = optional(string)
+    target_group_health_check_port                = optional(string)
+    target_group_health_check_protocol            = optional(string, "HTTP")
+    target_group_health_check_timeout             = optional(number)
+    target_group_health_check_healthy_threshold   = optional(number)
+    target_group_health_check_unhealthy_threshold = optional(number)
+    target_group_health_check_matcher             = optional(string)
+
     host         = optional(string, "#{host}")
     path         = optional(string, "/#{path}")
     port         = optional(string, "#{port}")
@@ -183,6 +194,17 @@ variable "https_ports" {
 
     target_group_protocol         = optional(string, "HTTP")
     target_group_protocol_version = optional(string, "HTTP1") # HTTP1, HTTP2 or GRPC
+
+    # Health check options, overriding default values provided as module variables
+    target_group_health_check_enabled             = optional(bool)
+    target_group_health_check_interval            = optional(number)
+    target_group_health_check_path                = optional(string)
+    target_group_health_check_port                = optional(string)
+    target_group_health_check_protocol            = optional(string, "HTTP")
+    target_group_health_check_timeout             = optional(number)
+    target_group_health_check_healthy_threshold   = optional(number)
+    target_group_health_check_unhealthy_threshold = optional(number)
+    target_group_health_check_matcher             = optional(string)
 
     host         = optional(string, "#{host}")
     path         = optional(string, "/#{path}")
@@ -335,6 +357,12 @@ variable "target_group_health_check_port" {
   description = "(Optional) The port to use to connect with the target. Valid values are either ports 1-65536, or traffic-port. Defaults to traffic-port."
   type        = string
   default     = "traffic-port"
+}
+
+variable "target_group_health_check_protocol" {
+  description = "(Optional) The protocol the load balancer uses when performing health checks on targets. Valid values are HTTP and HTTPS. Defaults to HTTP."
+  type        = string
+  default     = "HTTP"
 }
 
 variable "target_group_health_check_timeout" {

@@ -166,15 +166,15 @@ resource "aws_lb_target_group" "lb_http_tgs" {
     }
   }
   health_check {
-    enabled             = var.target_group_health_check_enabled
-    interval            = var.target_group_health_check_interval
-    path                = var.target_group_health_check_path
-    port                = var.target_group_health_check_port
-    protocol            = lookup(each.value, "target_group_protocol", "HTTP")
-    timeout             = var.target_group_health_check_timeout
-    healthy_threshold   = var.target_group_health_check_healthy_threshold
-    unhealthy_threshold = var.target_group_health_check_unhealthy_threshold
-    matcher             = var.target_group_health_check_matcher
+    enabled             = lookup(each.value, "target_group_health_check_enabled", var.target_group_health_check_enabled)
+    interval            = lookup(each.value, "target_group_health_check_interval", var.target_group_health_check_interval)
+    path                = lookup(each.value, "target_group_health_check_path", var.target_group_health_check_path)
+    port                = lookup(each.value, "target_group_health_check_port", var.target_group_health_check_port)
+    protocol            = lookup(each.value, "target_group_health_check_protocol", var.target_group_health_check_protocol)
+    timeout             = lookup(each.value, "target_group_health_check_timeout", var.target_group_health_check_timeout)
+    healthy_threshold   = lookup(each.value, "target_group_health_check_healthy_threshold", var.target_group_health_check_healthy_threshold)
+    unhealthy_threshold = lookup(each.value, "target_group_health_check_unhealthy_threshold", var.target_group_health_check_unhealthy_threshold)
+    matcher             = lookup(each.value, "target_group_health_check_matcher", var.target_group_health_check_matcher)
   }
   target_type = "ip"
   tags = merge(
@@ -242,15 +242,15 @@ resource "aws_lb_target_group" "lb_https_tgs" {
     }
   }
   health_check {
-    enabled             = var.target_group_health_check_enabled
-    interval            = var.target_group_health_check_interval
-    path                = var.target_group_health_check_path
-    port                = var.target_group_health_check_port
-    protocol            = lookup(each.value, "target_group_protocol", "HTTP")
-    timeout             = var.target_group_health_check_timeout
-    healthy_threshold   = var.target_group_health_check_healthy_threshold
-    unhealthy_threshold = var.target_group_health_check_unhealthy_threshold
-    matcher             = var.target_group_health_check_matcher
+    enabled             = lookup(each.value, "target_group_health_check_enabled", var.target_group_health_check_enabled)
+    interval            = lookup(each.value, "target_group_health_check_interval", var.target_group_health_check_interval)
+    path                = lookup(each.value, "target_group_health_check_path", var.target_group_health_check_path)
+    port                = lookup(each.value, "target_group_health_check_port", var.target_group_health_check_port)
+    protocol            = lookup(each.value, "target_group_health_check_protocol", var.target_group_health_check_protocol)
+    timeout             = lookup(each.value, "target_group_health_check_timeout", var.target_group_health_check_timeout)
+    healthy_threshold   = lookup(each.value, "target_group_health_check_healthy_threshold", var.target_group_health_check_healthy_threshold)
+    unhealthy_threshold = lookup(each.value, "target_group_health_check_unhealthy_threshold", var.target_group_health_check_unhealthy_threshold)
+    matcher             = lookup(each.value, "target_group_health_check_matcher", var.target_group_health_check_matcher)
   }
   target_type = "ip"
   tags = merge(
