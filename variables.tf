@@ -145,13 +145,13 @@ variable "waf_web_acl_arn" {
 # ACCESS CONTROL TO APPLICATION LOAD BALANCER
 #------------------------------------------------------------------------------
 variable "http_ports" {
-  description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
+  description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener_port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
   type = map(object({
     type = optional(string)
 
-    listener_port     = number
-    target_group_port = number
+    listener_port = number
 
+    target_group_port             = optional(number)
     target_group_protocol         = optional(string, "HTTP")
     target_group_protocol_version = optional(string, "HTTP1") # HTTP1, HTTP2 or GRPC
 
@@ -182,16 +182,24 @@ variable "http_ports" {
       target_group_port = 80
     }
   }
+  validation {
+    condition     = alltrue([for _, v in var.http_ports : v.type != "forward" || v.target_group_port != null])
+    error_message = "target_group_port must be set if type is forward"
+  }
+  validation {
+    condition     = alltrue([for _, v in var.http_ports : (v.type == "redirect" || v.type == "fixed-response") ? v.status_code != null : true])
+    error_message = "status_code must be set if type is redirect or fixed-response"
+  }
 }
 
 variable "https_ports" {
-  description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
+  description = "Map containing objects to define listeners behaviour based on type field. If type field is `forward`, include listener_port and the target_group_port. For `redirect` type, include listener_port, host, path, port, protocol, query and status_code. For `fixed-response`, include listener_port, content_type, message_body and status_code"
   type = map(object({
     type = optional(string)
 
-    listener_port     = number
-    target_group_port = number
+    listener_port = number
 
+    target_group_port             = optional(number)
     target_group_protocol         = optional(string, "HTTP")
     target_group_protocol_version = optional(string, "HTTP1") # HTTP1, HTTP2 or GRPC
 
@@ -221,6 +229,14 @@ variable "https_ports" {
       listener_port     = 443
       target_group_port = 443
     }
+  }
+  validation {
+    condition     = alltrue([for _, v in var.https_ports : v.type != "forward" || v.target_group_port != null])
+    error_message = "target_group_port must be set if type is forward"
+  }
+  validation {
+    condition     = alltrue([for _, v in var.https_ports : (v.type == "redirect" || v.type == "fixed-response") ? v.status_code != null : true])
+    error_message = "status_code must be set if type is redirect or fixed-response"
   }
 }
 
