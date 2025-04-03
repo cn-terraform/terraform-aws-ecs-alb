@@ -118,7 +118,7 @@ resource "aws_security_group_rule" "ingress_through_https" {
 resource "null_resource" "lb_http_tgs_config" {
   for_each = {
     for name, config in var.http_ports : name => config
-    if lookup(config, "type", "") == "" || lookup(config, "type", "") == "forward"
+    if config.type == null || config.type == "forward"
   }
 
   triggers = {
@@ -131,7 +131,7 @@ resource "null_resource" "lb_http_tgs_config" {
 resource "random_id" "lb_http_tgs_id" {
   for_each = {
     for name, config in var.http_ports : name => config
-    if lookup(config, "type", "") == "" || lookup(config, "type", "") == "forward"
+    if config.type == null || config.type == "forward"
   }
 
   byte_length = 2
@@ -147,12 +147,12 @@ resource "random_id" "lb_http_tgs_id" {
 resource "aws_lb_target_group" "lb_http_tgs" {
   for_each = {
     for name, config in var.http_ports : name => config
-    if lookup(config, "type", "") == "" || lookup(config, "type", "") == "forward"
+    if config.type == null || config.type == "forward"
   }
   name                          = "${var.name_prefix}-http-${each.value.target_group_port}-${random_id.lb_http_tgs_id[each.key].hex}"
   port                          = each.value.target_group_port
-  protocol                      = lookup(each.value, "target_group_protocol", "HTTP")
-  protocol_version              = lookup(each.value, "target_group_protocol_version", "HTTP1")
+  protocol                      = coalesce(each.value.target_group_protocol, "HTTP")
+  protocol_version              = coalesce(each.value.target_group_protocol_version, "HTTP1")
   vpc_id                        = var.vpc_id
   deregistration_delay          = var.deregistration_delay
   slow_start                    = var.slow_start
@@ -166,15 +166,15 @@ resource "aws_lb_target_group" "lb_http_tgs" {
     }
   }
   health_check {
-    enabled             = lookup(each.value, "target_group_health_check_enabled", var.target_group_health_check_enabled)
-    interval            = lookup(each.value, "target_group_health_check_interval", var.target_group_health_check_interval)
-    path                = lookup(each.value, "target_group_health_check_path", var.target_group_health_check_path)
-    port                = lookup(each.value, "target_group_health_check_port", var.target_group_health_check_port)
-    protocol            = lookup(each.value, "target_group_health_check_protocol", var.target_group_health_check_protocol)
-    timeout             = lookup(each.value, "target_group_health_check_timeout", var.target_group_health_check_timeout)
-    healthy_threshold   = lookup(each.value, "target_group_health_check_healthy_threshold", var.target_group_health_check_healthy_threshold)
-    unhealthy_threshold = lookup(each.value, "target_group_health_check_unhealthy_threshold", var.target_group_health_check_unhealthy_threshold)
-    matcher             = lookup(each.value, "target_group_health_check_matcher", var.target_group_health_check_matcher)
+    enabled             = coalesce(each.value.target_group_health_check_enabled, var.target_group_health_check_enabled)
+    interval            = coalesce(each.value.target_group_health_check_interval, var.target_group_health_check_interval)
+    path                = coalesce(each.value.target_group_health_check_path, var.target_group_health_check_path)
+    port                = coalesce(each.value.target_group_health_check_port, var.target_group_health_check_port)
+    protocol            = coalesce(each.value.target_group_health_check_protocol, var.target_group_health_check_protocol)
+    timeout             = coalesce(each.value.target_group_health_check_timeout, var.target_group_health_check_timeout)
+    healthy_threshold   = coalesce(each.value.target_group_health_check_healthy_threshold, var.target_group_health_check_healthy_threshold)
+    unhealthy_threshold = coalesce(each.value.target_group_health_check_unhealthy_threshold, var.target_group_health_check_unhealthy_threshold)
+    matcher             = coalesce(each.value.target_group_health_check_matcher, var.target_group_health_check_matcher)
   }
   target_type = "ip"
   tags = merge(
@@ -194,7 +194,7 @@ resource "aws_lb_target_group" "lb_http_tgs" {
 resource "null_resource" "lb_https_tgs_config" {
   for_each = {
     for name, config in var.https_ports : name => config
-    if lookup(config, "type", "") == "" || lookup(config, "type", "") == "forward"
+    if config.type == null || config.type == "forward"
   }
 
   triggers = {
@@ -207,7 +207,7 @@ resource "null_resource" "lb_https_tgs_config" {
 resource "random_id" "lb_https_tgs_id" {
   for_each = {
     for name, config in var.https_ports : name => config
-    if lookup(config, "type", "") == "" || lookup(config, "type", "") == "forward"
+    if config.type == null || config.type == "forward"
   }
 
   byte_length = 2
@@ -223,12 +223,12 @@ resource "random_id" "lb_https_tgs_id" {
 resource "aws_lb_target_group" "lb_https_tgs" {
   for_each = {
     for name, config in var.https_ports : name => config
-    if lookup(config, "type", "") == "" || lookup(config, "type", "") == "forward"
+    if config.type == null || config.type == "forward"
   }
   name                          = "${var.name_prefix}-https-${each.value.target_group_port}-${random_id.lb_https_tgs_id[each.key].hex}"
   port                          = each.value.target_group_port
-  protocol                      = lookup(each.value, "target_group_protocol", "HTTP")
-  protocol_version              = lookup(each.value, "target_group_protocol_version", "HTTP1")
+  protocol                      = coalesce(each.value.target_group_protocol, "HTTP")
+  protocol_version              = coalesce(each.value.target_group_protocol_version, "HTTP1")
   vpc_id                        = var.vpc_id
   deregistration_delay          = var.deregistration_delay
   slow_start                    = var.slow_start
@@ -242,15 +242,15 @@ resource "aws_lb_target_group" "lb_https_tgs" {
     }
   }
   health_check {
-    enabled             = lookup(each.value, "target_group_health_check_enabled", var.target_group_health_check_enabled)
-    interval            = lookup(each.value, "target_group_health_check_interval", var.target_group_health_check_interval)
-    path                = lookup(each.value, "target_group_health_check_path", var.target_group_health_check_path)
-    port                = lookup(each.value, "target_group_health_check_port", var.target_group_health_check_port)
-    protocol            = lookup(each.value, "target_group_health_check_protocol", var.target_group_health_check_protocol)
-    timeout             = lookup(each.value, "target_group_health_check_timeout", var.target_group_health_check_timeout)
-    healthy_threshold   = lookup(each.value, "target_group_health_check_healthy_threshold", var.target_group_health_check_healthy_threshold)
-    unhealthy_threshold = lookup(each.value, "target_group_health_check_unhealthy_threshold", var.target_group_health_check_unhealthy_threshold)
-    matcher             = lookup(each.value, "target_group_health_check_matcher", var.target_group_health_check_matcher)
+    enabled             = coalesce(each.value.target_group_health_check_enabled, var.target_group_health_check_enabled)
+    interval            = coalesce(each.value.target_group_health_check_interval, var.target_group_health_check_interval)
+    path                = coalesce(each.value.target_group_health_check_path, var.target_group_health_check_path)
+    port                = coalesce(each.value.target_group_health_check_port, var.target_group_health_check_port)
+    protocol            = coalesce(each.value.target_group_health_check_protocol, var.target_group_health_check_protocol)
+    timeout             = coalesce(each.value.target_group_health_check_timeout, var.target_group_health_check_timeout)
+    healthy_threshold   = coalesce(each.value.target_group_health_check_healthy_threshold, var.target_group_health_check_healthy_threshold)
+    unhealthy_threshold = coalesce(each.value.target_group_health_check_unhealthy_threshold, var.target_group_health_check_unhealthy_threshold)
+    matcher             = coalesce(each.value.target_group_health_check_matcher, var.target_group_health_check_matcher)
   }
   target_type = "ip"
   tags = merge(
@@ -277,7 +277,7 @@ resource "aws_lb_listener" "lb_http_listeners" {
   protocol          = "HTTP"
 
   dynamic "default_action" {
-    for_each = lookup(each.value, "type", "") == "redirect" ? [1] : []
+    for_each = each.value.type == "redirect" ? [1] : []
     content {
       type = "redirect"
 
@@ -287,27 +287,27 @@ resource "aws_lb_listener" "lb_http_listeners" {
         port        = each.value.port
         protocol    = each.value.protocol
         query       = each.value.query
-        status_code = lookup(each.value, "status_code", "HTTP_301")
+        status_code = coalesce(each.value.status_code, "HTTP_301")
       }
     }
   }
 
   dynamic "default_action" {
-    for_each = lookup(each.value, "type", "") == "fixed-response" ? [1] : []
+    for_each = each.value.type == "fixed-response" ? [1] : []
     content {
       type = "fixed-response"
 
       fixed_response {
         content_type = each.value.content_type
         message_body = each.value.message_body
-        status_code  = lookup(each.value, "status_code", "200")
+        status_code  = coalesce(each.value.status_code, "200")
       }
     }
   }
 
   # We fallback to using forward type action if type is not defined
   dynamic "default_action" {
-    for_each = (lookup(each.value, "type", "") == "" || lookup(each.value, "type", "") == "forward") ? [1] : []
+    for_each = (each.value.type == null || each.value.type == "forward") ? [1] : []
     content {
       target_group_arn = aws_lb_target_group.lb_http_tgs[each.key].arn
       type             = "forward"
@@ -332,7 +332,7 @@ resource "aws_lb_listener" "lb_https_listeners" {
   certificate_arn   = var.default_certificate_arn
 
   dynamic "default_action" {
-    for_each = lookup(each.value, "type", "") == "redirect" ? [1] : []
+    for_each = each.value.type == "redirect" ? [1] : []
     content {
       type = "redirect"
 
@@ -342,27 +342,27 @@ resource "aws_lb_listener" "lb_https_listeners" {
         port        = each.value.port
         protocol    = each.value.protocol
         query       = each.value.query
-        status_code = lookup(each.value, "status_code", "HTTP_301")
+        status_code = coalesce(each.value.status_code, "HTTP_301")
       }
     }
   }
 
   dynamic "default_action" {
-    for_each = lookup(each.value, "type", "") == "fixed-response" ? [1] : []
+    for_each = each.value.type == "fixed-response" ? [1] : []
     content {
       type = "fixed-response"
 
       fixed_response {
         content_type = each.value.content_type
         message_body = each.value.message_body
-        status_code  = lookup(each.value, "status_code", "200")
+        status_code  = coalesce(each.value.status_code, "200")
       }
     }
   }
 
   # We fallback to using forward type action if type is not defined
   dynamic "default_action" {
-    for_each = (lookup(each.value, "type", "") == "" || lookup(each.value, "type", "") == "forward") ? [1] : []
+    for_each = (each.value.type == null || each.value.type == "forward") ? [1] : []
     content {
       target_group_arn = aws_lb_target_group.lb_https_tgs[each.key].arn
       type             = "forward"
