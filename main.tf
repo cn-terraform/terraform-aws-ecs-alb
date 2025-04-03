@@ -151,8 +151,8 @@ resource "aws_lb_target_group" "lb_http_tgs" {
   }
   name                          = "${var.name_prefix}-http-${each.value.target_group_port}-${random_id.lb_http_tgs_id[each.key].hex}"
   port                          = each.value.target_group_port
-  protocol                      = each.value.target_group_protocol == null ? "HTTP" : each.value.target_group_protocol
-  protocol_version              = each.value.target_group_protocol_version == null ? "HTTP1" : each.value.target_group_protocol_version
+  protocol                      = coalesce(each.value.target_group_protocol, "HTTP")
+  protocol_version              = coalesce(each.value.target_group_protocol_version, "HTTP1")
   vpc_id                        = var.vpc_id
   deregistration_delay          = var.deregistration_delay
   slow_start                    = var.slow_start
@@ -166,15 +166,15 @@ resource "aws_lb_target_group" "lb_http_tgs" {
     }
   }
   health_check {
-    enabled             = each.value.target_group_health_check_enabled == null ? var.target_group_health_check_enabled : each.value.target_group_health_check_enabled
-    interval            = each.value.target_group_health_check_interval == null ? var.target_group_health_check_interval : each.value.target_group_health_check_interval
-    path                = each.value.target_group_health_check_path == null ? var.target_group_health_check_path : each.value.target_group_health_check_path
-    port                = each.value.target_group_health_check_port == null ? var.target_group_health_check_port : each.value.target_group_health_check_port
-    protocol            = each.value.target_group_health_check_protocol == null ? var.target_group_health_check_protocol : each.value.target_group_health_check_protocol
-    timeout             = each.value.target_group_health_check_timeout == null ? var.target_group_health_check_timeout : each.value.target_group_health_check_timeout
-    healthy_threshold   = each.value.target_group_health_check_healthy_threshold == null ? var.target_group_health_check_healthy_threshold : each.value.target_group_health_check_healthy_threshold
-    unhealthy_threshold = each.value.target_group_health_check_unhealthy_threshold == null ? var.target_group_health_check_unhealthy_threshold : each.value.target_group_health_check_unhealthy_threshold
-    matcher             = each.value.target_group_health_check_matcher == null ? var.target_group_health_check_matcher : each.value.target_group_health_check_matcher
+    enabled             = coalesce(each.value.target_group_health_check_enabled, var.target_group_health_check_enabled)
+    interval            = coalesce(each.value.target_group_health_check_interval, var.target_group_health_check_interval)
+    path                = coalesce(each.value.target_group_health_check_path, var.target_group_health_check_path)
+    port                = coalesce(each.value.target_group_health_check_port, var.target_group_health_check_port)
+    protocol            = coalesce(each.value.target_group_health_check_protocol, var.target_group_health_check_protocol)
+    timeout             = coalesce(each.value.target_group_health_check_timeout, var.target_group_health_check_timeout)
+    healthy_threshold   = coalesce(each.value.target_group_health_check_healthy_threshold, var.target_group_health_check_healthy_threshold)
+    unhealthy_threshold = coalesce(each.value.target_group_health_check_unhealthy_threshold, var.target_group_health_check_unhealthy_threshold)
+    matcher             = coalesce(each.value.target_group_health_check_matcher, var.target_group_health_check_matcher)
   }
   target_type = "ip"
   tags = merge(
@@ -227,8 +227,8 @@ resource "aws_lb_target_group" "lb_https_tgs" {
   }
   name                          = "${var.name_prefix}-https-${each.value.target_group_port}-${random_id.lb_https_tgs_id[each.key].hex}"
   port                          = each.value.target_group_port
-  protocol                      = each.value.target_group_protocol == null ? "HTTP" : each.value.target_group_protocol
-  protocol_version              = each.value.target_group_protocol_version == null ? "HTTP1" : each.value.target_group_protocol_version
+  protocol                      = coalesce(each.value.target_group_protocol, "HTTP")
+  protocol_version              = coalesce(each.value.target_group_protocol_version, "HTTP1")
   vpc_id                        = var.vpc_id
   deregistration_delay          = var.deregistration_delay
   slow_start                    = var.slow_start
@@ -242,15 +242,15 @@ resource "aws_lb_target_group" "lb_https_tgs" {
     }
   }
   health_check {
-    enabled             = each.value.target_group_health_check_enabled == null ? var.target_group_health_check_enabled : each.value.target_group_health_check_enabled
-    interval            = each.value.target_group_health_check_interval == null ? var.target_group_health_check_interval : each.value.target_group_health_check_interval
-    path                = each.value.target_group_health_check_path == null ? var.target_group_health_check_path : each.value.target_group_health_check_path
-    port                = each.value.target_group_health_check_port == null ? var.target_group_health_check_port : each.value.target_group_health_check_port
-    protocol            = each.value.target_group_health_check_protocol == null ? var.target_group_health_check_protocol : each.value.target_group_health_check_protocol
-    timeout             = each.value.target_group_health_check_timeout == null ? var.target_group_health_check_timeout : each.value.target_group_health_check_timeout
-    healthy_threshold   = each.value.target_group_health_check_healthy_threshold == null ? var.target_group_health_check_healthy_threshold : each.value.target_group_health_check_healthy_threshold
-    unhealthy_threshold = each.value.target_group_health_check_unhealthy_threshold == null ? var.target_group_health_check_unhealthy_threshold : each.value.target_group_health_check_unhealthy_threshold
-    matcher             = each.value.target_group_health_check_matcher == null ? var.target_group_health_check_matcher : each.value.target_group_health_check_matcher
+    enabled             = coalesce(each.value.target_group_health_check_enabled, var.target_group_health_check_enabled)
+    interval            = coalesce(each.value.target_group_health_check_interval, var.target_group_health_check_interval)
+    path                = coalesce(each.value.target_group_health_check_path, var.target_group_health_check_path)
+    port                = coalesce(each.value.target_group_health_check_port, var.target_group_health_check_port)
+    protocol            = coalesce(each.value.target_group_health_check_protocol, var.target_group_health_check_protocol)
+    timeout             = coalesce(each.value.target_group_health_check_timeout, var.target_group_health_check_timeout)
+    healthy_threshold   = coalesce(each.value.target_group_health_check_healthy_threshold, var.target_group_health_check_healthy_threshold)
+    unhealthy_threshold = coalesce(each.value.target_group_health_check_unhealthy_threshold, var.target_group_health_check_unhealthy_threshold)
+    matcher             = coalesce(each.value.target_group_health_check_matcher, var.target_group_health_check_matcher)
   }
   target_type = "ip"
   tags = merge(
@@ -287,7 +287,7 @@ resource "aws_lb_listener" "lb_http_listeners" {
         port        = each.value.port
         protocol    = each.value.protocol
         query       = each.value.query
-        status_code = each.value.status_code == null ? "HTTP_301" : each.value.status_code
+        status_code = coalesce(each.value.status_code, "HTTP_301")
       }
     }
   }
@@ -300,7 +300,7 @@ resource "aws_lb_listener" "lb_http_listeners" {
       fixed_response {
         content_type = each.value.content_type
         message_body = each.value.message_body
-        status_code  = each.value.status_code == null ? "200" : each.value.status_code
+        status_code  = coalesce(each.value.status_code, "200")
       }
     }
   }
@@ -342,7 +342,7 @@ resource "aws_lb_listener" "lb_https_listeners" {
         port        = each.value.port
         protocol    = each.value.protocol
         query       = each.value.query
-        status_code = each.value.status_code == null ? "HTTP_301" : each.value.status_code
+        status_code = coalesce(each.value.status_code, "HTTP_301")
       }
     }
   }
@@ -355,7 +355,7 @@ resource "aws_lb_listener" "lb_https_listeners" {
       fixed_response {
         content_type = each.value.content_type
         message_body = each.value.message_body
-        status_code  = each.value.status_code == null ? "200" : each.value.status_code
+        status_code  = coalesce(each.value.status_code, "200")
       }
     }
   }
