@@ -182,6 +182,14 @@ variable "http_ports" {
       target_group_port = 80
     }
   }
+  validation {
+    condition     = alltrue([for _, v in var.http_ports : v.type != "forward" || v.target_group_port != null])
+    error_message = "target_group_port must be set if type is forward"
+  }
+  validation {
+    condition     = alltrue([for _, v in var.http_ports : (v.type == "redirect" || v.type == "fixed-response") ? v.status_code != null : true])
+    error_message = "status_code must be set if type is redirect or fixed-response"
+  }
 }
 
 variable "https_ports" {
@@ -221,6 +229,14 @@ variable "https_ports" {
       listener_port     = 443
       target_group_port = 443
     }
+  }
+  validation {
+    condition     = alltrue([for _, v in var.https_ports : v.type != "forward" || v.target_group_port != null])
+    error_message = "target_group_port must be set if type is forward"
+  }
+  validation {
+    condition     = alltrue([for _, v in var.https_ports : (v.type == "redirect" || v.type == "fixed-response") ? v.status_code != null : true])
+    error_message = "status_code must be set if type is redirect or fixed-response"
   }
 }
 
