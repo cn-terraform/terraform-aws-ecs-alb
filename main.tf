@@ -118,7 +118,7 @@ resource "aws_security_group_rule" "ingress_through_https" {
 resource "null_resource" "lb_http_tgs_config" {
   for_each = {
     for name, config in var.http_ports : name => config
-    if config.type == null || config.type == "forward"
+    if(config.type == null || config.type == "forward") && config.target_group_port != null
   }
 
   triggers = {
@@ -131,7 +131,7 @@ resource "null_resource" "lb_http_tgs_config" {
 resource "random_id" "lb_http_tgs_id" {
   for_each = {
     for name, config in var.http_ports : name => config
-    if config.type == null || config.type == "forward"
+    if(config.type == null || config.type == "forward") && config.target_group_port != null
   }
 
   byte_length = 2
@@ -147,7 +147,7 @@ resource "random_id" "lb_http_tgs_id" {
 resource "aws_lb_target_group" "lb_http_tgs" {
   for_each = {
     for name, config in var.http_ports : name => config
-    if config.type == null || config.type == "forward"
+    if(config.type == null || config.type == "forward") && config.target_group_port != null
   }
   name                          = "${var.name_prefix}-http-${each.value.target_group_port}-${random_id.lb_http_tgs_id[each.key].hex}"
   port                          = each.value.target_group_port
@@ -194,7 +194,7 @@ resource "aws_lb_target_group" "lb_http_tgs" {
 resource "null_resource" "lb_https_tgs_config" {
   for_each = {
     for name, config in var.https_ports : name => config
-    if config.type == null || config.type == "forward"
+    if(config.type == null || config.type == "forward") && config.target_group_port != null
   }
 
   triggers = {
@@ -207,7 +207,7 @@ resource "null_resource" "lb_https_tgs_config" {
 resource "random_id" "lb_https_tgs_id" {
   for_each = {
     for name, config in var.https_ports : name => config
-    if config.type == null || config.type == "forward"
+    if(config.type == null || config.type == "forward") && config.target_group_port != null
   }
 
   byte_length = 2
@@ -223,7 +223,7 @@ resource "random_id" "lb_https_tgs_id" {
 resource "aws_lb_target_group" "lb_https_tgs" {
   for_each = {
     for name, config in var.https_ports : name => config
-    if config.type == null || config.type == "forward"
+    if(config.type == null || config.type == "forward") && config.target_group_port != null
   }
   name                          = "${var.name_prefix}-https-${each.value.target_group_port}-${random_id.lb_https_tgs_id[each.key].hex}"
   port                          = each.value.target_group_port
