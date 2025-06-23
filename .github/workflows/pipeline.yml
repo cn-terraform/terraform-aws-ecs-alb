@@ -28,7 +28,7 @@ jobs:
     container: hashicorp/terraform
     strategy:
       matrix: {
-        dir: ['examples/test']
+        dir: ['examples/complete', 'examples/provide-own-bucket']
       }
     services:
       localstack:
