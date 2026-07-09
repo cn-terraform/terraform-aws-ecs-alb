@@ -11,7 +11,7 @@ Test Continuous Integration/Delivery environment on AWS ECS.
 
 ## Use this code as a Terraform module
 
-Check valid versions on: 
+Check valid versions on:
 * Github Releases: <https://github.com/cn-terraform/terraform-aws-ecs-alb/releases>
 * Terraform Module Registry: <https://registry.terraform.io/modules/cn-terraform/ecs-alb/aws>
 
@@ -24,7 +24,7 @@ Please run this command right after cloning the repository.
         pre-commit install
 
 For that you may need to install the following tools:
-* [Pre-commit](https://pre-commit.com/) 
+* [Pre-commit](https://pre-commit.com/)
 * [Terraform Docs](https://terraform-docs.io/)
 
 In order to run all checks at any point run the following command:
