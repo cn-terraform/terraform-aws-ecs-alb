@@ -11,7 +11,7 @@ Test Continuous Integration/Delivery environment on AWS ECS.
 
 ## Use this code as a Terraform module
 
-Check valid versions on: 
+Check valid versions on:
 * Github Releases: <https://github.com/cn-terraform/terraform-aws-ecs-alb/releases>
 * Terraform Module Registry: <https://registry.terraform.io/modules/cn-terraform/ecs-alb/aws>
 
@@ -24,18 +24,18 @@ Please run this command right after cloning the repository.
         pre-commit install
 
 For that you may need to install the following tools:
-* [Pre-commit](https://pre-commit.com/) 
+* [Pre-commit](https://pre-commit.com/)
 * [Terraform Docs](https://terraform-docs.io/)
 
 In order to run all checks at any point run the following command:
 
         pre-commit run --all-files
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3 |
@@ -44,21 +44,21 @@ In order to run all checks at any point run the following command:
 ## Providers
 
 | Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.93.0 |
-| <a name="provider_null"></a> [null](#provider\_null) | 3.2.3 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.7.1 |
+| ---- | ------- |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4 |
+| <a name="provider_null"></a> [null](#provider\_null) | >= 3 |
+| <a name="provider_random"></a> [random](#provider\_random) | >= 3 |
 
 ## Modules
 
 | Name | Source | Version |
-|------|--------|---------|
-| <a name="module_lb_logs_s3"></a> [lb\_logs\_s3](#module\_lb\_logs\_s3) | cn-terraform/logs-s3-bucket/aws | 1.0.6 |
+| ---- | ------ | ------- |
+| <a name="module_lb_logs_s3"></a> [lb\_logs\_s3](#module\_lb\_logs\_s3) | cn-terraform/logs-s3-bucket/aws | 1.0.7 |
 
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [aws_lb.lb](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb) | resource |
 | [aws_lb_listener.lb_http_listeners](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) | resource |
 | [aws_lb_listener.lb_https_listeners](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) | resource |
@@ -79,7 +79,7 @@ In order to run all checks at any point run the following command:
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_access_logs_prefix"></a> [access\_logs\_prefix](#input\_access\_logs\_prefix) | (Optional) if access logging to an S3 bucket, this sets a prefix in the bucket beneath which this LB's logs will be organized. | `string` | `null` | no |
 | <a name="input_additional_certificates_arn_for_https_listeners"></a> [additional\_certificates\_arn\_for\_https\_listeners](#input\_additional\_certificates\_arn\_for\_https\_listeners) | (Optional) List of SSL server certificate ARNs for HTTPS listener. Use it if you need to set additional certificates besides default\_certificate\_arn | `list(any)` | `[]` | no |
 | <a name="input_block_s3_bucket_public_access"></a> [block\_s3\_bucket\_public\_access](#input\_block\_s3\_bucket\_public\_access) | (Optional) If true, public access to the S3 bucket will be blocked.  Ignored if log\_bucket\_id is provided. | `bool` | `true` | no |
@@ -128,7 +128,7 @@ In order to run all checks at any point run the following command:
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_aws_lb_lb_arn"></a> [aws\_lb\_lb\_arn](#output\_aws\_lb\_lb\_arn) | The ARN of the load balancer (matches id). |
 | <a name="output_aws_lb_lb_arn_suffix"></a> [aws\_lb\_lb\_arn\_suffix](#output\_aws\_lb\_lb\_arn\_suffix) | The ARN suffix for use with CloudWatch Metrics. |
 | <a name="output_aws_lb_lb_dns_name"></a> [aws\_lb\_lb\_dns\_name](#output\_aws\_lb\_lb\_dns\_name) | The DNS name of the load balancer. |
@@ -158,4 +158,4 @@ In order to run all checks at any point run the following command:
 | <a name="output_lb_https_tgs_ports"></a> [lb\_https\_tgs\_ports](#output\_lb\_https\_tgs\_ports) | List of HTTPS Target Groups ports |
 | <a name="output_lb_logs_s3_bucket_arn"></a> [lb\_logs\_s3\_bucket\_arn](#output\_lb\_logs\_s3\_bucket\_arn) | LB Logging S3 Bucket ARN |
 | <a name="output_lb_logs_s3_bucket_id"></a> [lb\_logs\_s3\_bucket\_id](#output\_lb\_logs\_s3\_bucket\_id) | LB Logging S3 Bucket ID |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
